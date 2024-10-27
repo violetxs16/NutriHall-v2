@@ -1,0 +1,5 @@
+2024/10/24-15:00:26.817 45f8 Log #3: 10 ops saved to Table #4 OK
+2024/10/24-15:00:26.818 45f8 Archiving C:\Users\viole\NutriHall\server\tmp\Default\Site Characteristics Database/000003.log: OK
+2024/10/24-15:00:26.818 45f8 Table #4: 10 entries OK
+2024/10/24-15:00:26.820 45f8 Archiving C:\Users\viole\NutriHall\server\tmp\Default\Site Characteristics Database/MANIFEST-000001: OK
+2024/10/24-15:00:26.841 45f8 **** Repaired leveldb C:\Users\viole\NutriHall\server\tmp\Default\Site Characteristics Database; recovered 1 files; 281 bytes. Some data may have been lost. ****
