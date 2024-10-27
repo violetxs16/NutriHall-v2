@@ -1,2 +1,3 @@
-2024/10/24-15:00:27.060 af4 Creating DB C:\Users\viole\NutriHall\server\tmp\Default\Session Storage since it was missing.
-2024/10/24-15:00:27.081 af4 Reusing MANIFEST C:\Users\viole\NutriHall\server\tmp\Default\Session Storage/MANIFEST-000001
+2024/10/27-16:50:06.951 2308 Reusing MANIFEST C:\source\NutriHall-v2\NutriHall\server\tmp\Default\Session Storage/MANIFEST-000001
+2024/10/27-16:50:06.952 2308 Recovering log #3
+2024/10/27-16:50:06.954 2308 Reusing old log C:\source\NutriHall-v2\NutriHall\server\tmp\Default\Session Storage/000003.log 
