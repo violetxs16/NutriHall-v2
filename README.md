@@ -1,7 +1,12 @@
 # NutriHall-v2
-Dependecies: 
-front end
-npm install @emotion/react
-npm install framer-motion
+Dependencies: 
+front end using vite
+1) npm install @emotion/react
+2) npm install framer-motion
 
-backend:
+backend: 'server' folder includes all the files for the Back-End 
+1) npm install firebase      - install firebase
+2) node index.js           -run web scraper
+Pre-reqs: 1)Have Node.js installed
+
+How to run Vite: npm run dev
