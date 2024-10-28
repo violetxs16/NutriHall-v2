@@ -5,6 +5,9 @@ import './App.css'
 import { css, jsx, Global } from "@emotion/react";
 import { useState } from "react";
 
+import { database } from '../firebaseConfig';
+import { ref, onValue } from 'firebase/database';
+
 import MenuItems from "./Components/MenuItems";
 import MenuData from "./Components/MenuData";
 import Navbar from "./Components/Navbar";
@@ -14,6 +17,29 @@ function App() {
   const [lunch, setLunch] = useState(false);
   const [shakes, setShakes] = useState(false);
 
+  // State to hold meals data from Firebase
+  const [meals, setMeals] = useState([]);
+  const [error, setError] = useState('');
+  /**The useEffect fetches meal data from Firebase and updates the meals state. */
+  useEffect(() => {
+    // Reference to the 'Meals' path in Firebase Realtime Database
+    const mealsRef = ref(database, 'Meals');
+    
+    // Listen for changes at the 'Meals' path
+    onValue(mealsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const mealList = Object.values(data);  // Convert data to an array
+        console.log("Fetched meals data:", mealList);
+        setMeals(mealList);
+      } else {
+        console.log("No data available");
+      }
+    }, (error) => {
+      setError("Error fetching data");
+      console.error(error);
+    });
+  }, []);
   return (
     <div
       className="App"
