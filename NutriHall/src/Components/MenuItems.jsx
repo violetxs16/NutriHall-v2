@@ -42,6 +42,7 @@ const MenuItems = ({ items, all, breakfast, lunch, shakes }) => {
           display: flex;
           border: #efefef 1px solid;
           border-top: none;
+          color: #000;
           ${mq[0]} {
             display: grid;
             img {

@@ -1,4 +1,46 @@
-const menuData = [
+// src/Components/MenuData.jsx
+/*import { useState, useEffect } from "react";
+import { database } from '../firebaseConfig';
+import { ref, onValue } from 'firebase/database';
+
+const useMenuData = () => {
+  const [menuData, setMenuData] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const mealsRef = ref(database, 'food');
+
+    onValue(
+      mealsRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          
+          // If the data under 'food' contains nested objects with each meal item
+          const mealList = Object.values(data).map((item) => ({
+            name: item.name || 'Unknown Item', // Safeguard in case 'name' is missing
+            restrictions: item.restrictions || [], // Ensure 'restrictions' has a default
+          }));
+
+          setMenuData(mealList);
+        } else {
+          setMenuData([]);
+        }
+      },
+      (error) => {
+        setError("Error fetching data");
+        console.error(error);
+      }
+    );
+  }, []);
+
+  return { menuData, error };
+};
+
+export default useMenuData;
+
+*/
+/*const useMenuData = [
   {
     id: 1,
     title: "buttermilk pancakes",
@@ -64,4 +106,48 @@ const menuData = [
   },
 ];
 
-export default menuData;
+export default useMenuData;
+*/
+// src/Components/MenuData.jsx
+// src/Components/MenuData.jsx
+import { useState, useEffect } from "react";
+import { database } from '../firebaseConfig';
+import { ref, onValue } from 'firebase/database';
+
+const useMenuData = () => {
+  const [menuData, setMenuData] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const mealsRef = ref(database, 'food');
+
+    onValue(
+      mealsRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+
+          const mealList = Object.entries(data).map(([id, item]) => ({
+            id, // unique Firebase key
+            title: item.name || "Untitled",
+            category: item.category || "uncategorized",
+            price: item.price || 0,
+            desc: item.description || "No description available",
+          }));
+
+          setMenuData(mealList);
+        } else {
+          setMenuData([]);
+        }
+      },
+      (error) => {
+        setError("Error fetching data");
+        console.error(error);
+      }
+    );
+  }, []);
+
+  return { menuData, error };
+};
+
+export default useMenuData;

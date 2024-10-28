@@ -1,6 +1,6 @@
 // src/firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database"; // Add other services you need
+import { getDatabase } from "firebase/database"; 
 
 const firebaseConfig = {
     apiKey: "AIzaSyDg1AXQ-uy1YSMH9cs8_KPutnls1efHEwQ",
