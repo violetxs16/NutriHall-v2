@@ -1,4 +1,5 @@
 // src/App.jsx
+import './app.css';
 import { css, jsx, Global } from "@emotion/react";
 import { useState } from "react";
 import MenuItems from "./Components/MenuItems";
