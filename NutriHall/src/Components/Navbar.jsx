@@ -1,6 +1,7 @@
 /**@jsxRuntime classic */
 /**@jsx jsx */
 import { css, jsx } from "@emotion/react";
+import { Link } from "react-router-dom"; // Import Link
 import Buttons from "./Buttons";
 
 const Navbar = ({ setAll, setBreakfast, setLunch, setShakes }) => {
@@ -58,6 +59,16 @@ const Navbar = ({ setAll, setBreakfast, setLunch, setShakes }) => {
         setShakes={setShakes}
       />
       <h3 className="dwu">dine with us.</h3>
+      <Link
+        to="/settings"
+        css={css`
+          margin-left: 20px;
+          text-decoration: none;
+          color: inherit;
+        `}
+      >
+        Settings
+      </Link>
     </div>
   );
 };
