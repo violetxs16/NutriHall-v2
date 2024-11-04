@@ -25,7 +25,11 @@ const MenuAll = ({ all, items }) => {
                 <motion.h5 className="item-title">{item.title}</motion.h5>
                 <motion.h5 className="item-price">${item.price}</motion.h5>
               </motion.div>
-              <motion.p className="item-desc">{item.desc}</motion.p>
+              <motion.div className="item-restrictions">
+                {item.restrictions.length > 0
+                    ? <p>Restrictions: {item.restrictions.join(", ")}</p>
+                    : <p>No restrictions</p>}
+                </motion.div>
             </motion.div>
           </motion.div>
         ))}

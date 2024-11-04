@@ -21,6 +21,7 @@ const useMenuData = () => {
             category: item.category || "uncategorized",
             price: item.price || 0,
             desc: item.description || "No description available",
+            restrictions: item.restrictions || [], // Add restrictions
           }));
 
           setMenuData(mealList);
