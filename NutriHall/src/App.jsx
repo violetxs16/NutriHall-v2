@@ -25,9 +25,9 @@ function App() {
     >
       <Navbar
         setAll={setAll}
-        setBreakfast={setBreakfast}
+    /**    setBreakfast={setBreakfast} 
         setLunch={setLunch}
-        setShakes={setShakes}
+        setShakes={setShakes}*/
       />
 
       <MenuItems
