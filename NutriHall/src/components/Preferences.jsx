@@ -75,6 +75,7 @@ const Preferences = () => {
         console.error('Error saving preferences:', error);
       });
   };
+  
 
   return (
     <div>
