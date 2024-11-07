@@ -37,19 +37,6 @@ const Header = () => {
     }));
   };
 
-  const handleGoalChange = (goal) => {
-    setTemporaryPreferences((prev) => ({
-      ...prev,
-      goal,
-    }));
-  };
-
-  const handleCalorieRangeChange = (e) => {
-    setTemporaryPreferences((prev) => ({
-      ...prev,
-      calorieRange: parseInt(e.target.value) || 0,
-    }));
-  };
 
   const toggleRestrictions = () => {
     setShowRestrictions((prev) => !prev);
@@ -58,7 +45,7 @@ const Header = () => {
   // Auto-close restrictions when viewport is too narrow
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 800 && showRestrictions) {
+      if (window.innerWidth < 1600 && showRestrictions) {
         setShowRestrictions(false);
       }
     };
