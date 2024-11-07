@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useState } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
+import { auth, database } from '../firebaseConfig';
+import { ref, push } from 'firebase/database';
 // Import all restriction images
 import veganImg from '../assets/vegan.gif';
 import alcoholImg from '../assets/alcohol.gif';
@@ -40,6 +42,7 @@ const restrictionImages = {
 const MenuAll = ({ all, items }) => {
   const { temporaryPreferences } = useContext(PreferencesContext);
   const [filteredItems, setFilteredItems] = useState([]);
+  const user = auth.currentUser;
 
   useEffect(() => {
     const { dietaryRestrictions } = temporaryPreferences;
@@ -47,6 +50,8 @@ const MenuAll = ({ all, items }) => {
     const activeRestrictions = Object.keys(dietaryRestrictions).filter(
       (key) => dietaryRestrictions[key]
     );
+
+    
 
     const filtered = items.filter((item) => {
       // Exclude items that match any active dietary restrictions
@@ -57,6 +62,28 @@ const MenuAll = ({ all, items }) => {
       }
       return true; // Include this item
     });
+
+    const handleRecordMeal = (item) => {
+      if (!user) {
+        alert('Please log in to record meals.');
+        return;
+      }
+  
+      const historyRef = ref(database, `users/${user.uid}/history`);
+      const newEntry = {
+        ...item,
+        recordedAt: new Date().toISOString(),
+      };
+  
+      push(historyRef, newEntry)
+        .then(() => {
+          alert('Meal recorded successfully!');
+        })
+        .catch((error) => {
+          console.error('Error recording meal:', error);
+        });
+    };
+  
 
     setFilteredItems(filtered);
   }, [items, temporaryPreferences]);
@@ -94,6 +121,13 @@ const MenuAll = ({ all, items }) => {
                   <p>No restrictions</p>
                 )}
               </div>
+              {/* Record Meal Button */}
+              <button
+              onClick={() => handleRecordMeal(item)}
+              className="mt-2 px-2 py-2 bg-green-200 text-#1F2937 rounded w-40"
+              >
+              Record Meal
+              </button>          
             </div>
           </div>
         ))}
