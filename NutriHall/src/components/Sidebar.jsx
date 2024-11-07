@@ -7,8 +7,8 @@ const Sidebar = () => {
     'block py-2.5 px-4 hover:bg-gray-700 transition duration-200';
 
   return (
-    <div className="w-64 h-screen bg-gray-800 text-white fixed">
-      <nav className="mt-10">
+    <div className="w-64 h-screen fixed top-16 left-0 bg-gray-800 text-white">
+      <nav className="mt-4">
         <NavLink to="/record-meal" className={linkClasses}>
           Record Meal
         </NavLink>

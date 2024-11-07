@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import imgAllMenu from "../img/undraw_barbecue.svg";
+import { motion } from 'framer-motion';
+import React, { useContext, useEffect, useState } from 'react';
+import { PreferencesContext } from '../contexts/PreferencesContext';
 // Import all restriction images
 import veganImg from '../assets/vegan.gif';
 import alcoholImg from '../assets/alcohol.gif';
@@ -37,54 +38,64 @@ const restrictionImages = {
 };
 
 const MenuAll = ({ all, items }) => {
-  const itemContainer = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-  };
+  const { temporaryPreferences } = useContext(PreferencesContext);
+  const [filteredItems, setFilteredItems] = useState([]);
 
+  useEffect(() => {
+    const { dietaryRestrictions } = temporaryPreferences;
+
+    const activeRestrictions = Object.keys(dietaryRestrictions).filter(
+      (key) => dietaryRestrictions[key]
+    );
+
+    const filtered = items.filter((item) => {
+      // Exclude items that match any active dietary restrictions
+      for (let restriction of activeRestrictions) {
+        if (item.restrictions.includes(restriction)) {
+          return false; // Exclude this item
+        }
+      }
+      return true; // Include this item
+    });
+
+    setFilteredItems(filtered);
+  }, [items, temporaryPreferences]);
   return (
     <>
       {all &&
-        items.map((item, i) => (
-          <motion.div
-            className="menu-items"
-            key={item.id}
-            variants={itemContainer}
-            transition={{ delay: i * 0.2 }}
-          >
-          
-            <motion.div className="item-content">
-              <motion.div className="item-title-box">
-                <motion.h5 className="item-title">{item.title}</motion.h5>
-                  <motion.div className="item-image-restrictions">
-                    {item.restrictions.map((restriction) => 
-                      restrictionImages[restriction] ? (
-                        <img
-                         // key={restriction}
-                          src={restrictionImages[restriction]}
-                          alt={restriction}
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                            borderRadius: "50%",
-                            marginRight: "5px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      ) : null
-                    )}
-                  </motion.div>
-              </motion.div>
-              <motion.div className="item-restrictions">
-                {item.restrictions.length > 0
-                    ? <p>Restrictions: {item.restrictions.join(", ")}</p>
-                    : <p>No restrictions</p>}
-                </motion.div>
-            </motion.div>
-          </motion.div>
+        filteredItems.map((item) => (
+          <div className="menu-items" key={item.id}>
+            <div className="item-content">
+              <div className="item-title-box">
+                <h5 className="item-title">{item.title}</h5>
+                <div className="item-image-restrictions">
+                  {item.restrictions.map((restriction) =>
+                    restrictionImages[restriction] ? (
+                      <img
+                        key={restriction}
+                        src={restrictionImages[restriction]}
+                        alt={restriction}
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          marginRight: '5px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : null
+                  )}
+                </div>
+              </div>
+              <div className="item-restrictions">
+                {item.restrictions.length > 0 ? (
+                  <p>Restrictions: {item.restrictions.join(', ')}</p>
+                ) : (
+                  <p>No restrictions</p>
+                )}
+              </div>
+            </div>
+          </div>
         ))}
     </>
   );

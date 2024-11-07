@@ -15,12 +15,12 @@ const Preferences = () => {
 
   useEffect(() => {
     if (user) {
-      // Fetch accountInfo to get weight, height, sex
+      // Fetch accountInfo to get weight, height, sex, age
       const accountRef = ref(database, `users/${user.uid}/accountInfo`);
       onValue(accountRef, (snapshot) => {
         const accountData = snapshot.val();
         if (accountData) {
-          const { weight, height, sex } = accountData;
+          const { weight, height, sex, age } = accountData;
           const calculatedCalories = calculateCalorieRange(
             weight,
             height,
@@ -36,6 +36,21 @@ const Preferences = () => {
       });
     }
   }, [user, preferences.goal]);
+  
+
+  useEffect(() => {
+    if (user) {
+      // Fetch preferences
+      const prefsRef = ref(database, `users/${user.uid}/preferences`);
+      onValue(prefsRef, (snapshot) => {
+        const prefsData = snapshot.val();
+        if (prefsData) {
+          setPreferences(prefsData);
+        }
+      });
+    }
+  }, [user]);
+  
 
   const dietaryOptions = [
     'vegan',
