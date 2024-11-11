@@ -2,19 +2,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { css, Global } from '@emotion/react';
-import Header from './Components/Header.jsx';
+import Header from './components/Header.jsx';
 import './styles/App.css';
 import { PreferencesProvider } from './contexts/PreferencesContext';
 
 // Components and Pages
-import Sidebar from './Components/Sidebar';
-import Login from './Components/Login';
-import Signup from './Components/Signup';
-import RecordMeal from './Components/RecordMeal';
+import Sidebar from './components/Sidebar';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import RecordMeal from './components/RecordMeal';
 import History from './ages/History';
 import Menu from './pages/Menu';
 import Settings from './pages/Settings';
-import PrivateRoute from './Components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute';
 import FoodDiary from './pages/FoodDiary';
 
 function App() {
