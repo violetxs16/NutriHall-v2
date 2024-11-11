@@ -21,7 +21,10 @@ const useMenuData = () => {
             category: item.category || "uncategorized",
             price: item.price || 0,
             desc: item.description || "No description available",
-            restrictions: item.restrictions || [], // Add restrictions
+            restrictions: item.restrictions || [],
+            calories: item.calories || 0,
+            protein: item.protein || 0,
+            diningHall: item.diningHall || 'Unknown',
           }));
 
           setMenuData(mealList);

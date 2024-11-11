@@ -62,6 +62,7 @@ const MenuAll = ({ all, items }) => {
       }
       return true; // Include this item
     });
+    
     setFilteredItems(filtered);
   }, [items, temporaryPreferences]);
 
