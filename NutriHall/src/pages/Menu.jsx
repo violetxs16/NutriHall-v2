@@ -128,8 +128,13 @@ const Menu = () => {
       )}
       {searchQuery === '' && !selectedDiningHall ? (
         // Show the background image and buttons
-        <div className="relative">
-          <img src={backgroundImage} alt="UCSC Map" className="w-full" />
+        <div className="relative" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
+          <img
+            src={backgroundImage}
+            alt="UCSC Map"
+            className="w-full h-auto"
+            style={{ maxHeight: '80vh', objectFit: 'contain' }}
+          />
           {/* Overlay buttons */}
           {diningHalls.map((hall) => (
             <button
@@ -169,6 +174,8 @@ const Menu = () => {
           breakfast={breakfast}
           lunch={lunch}
           shakes={shakes}
+          searchQuery={searchQuery}
+          selectedDiningHall={selectedDiningHall}
         />
 
 

@@ -39,7 +39,7 @@ const restrictionImages = {
   veggie: veggieImg,
 };
 
-const MenuAll = ({ all, items }) => {
+const MenuAll = ({ all, items, searchQuery, selectedDiningHall }) => {
   const { temporaryPreferences } = useContext(PreferencesContext);
   const [filteredItems, setFilteredItems] = useState([]);
   const user = auth.currentUser;
@@ -53,7 +53,7 @@ const MenuAll = ({ all, items }) => {
 
     
 
-    const filtered = items.filter((item) => {
+    let filtered = items.filter((item) => {
       // Exclude items that match any active dietary restrictions
       for (let restriction of activeRestrictions) {
         if (item.restrictions.includes(restriction)) {
@@ -62,9 +62,24 @@ const MenuAll = ({ all, items }) => {
       }
       return true; // Include this item
     });
-    
+
+    // Apply search query filtering
+    if (searchQuery) {
+      filtered = filtered.filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply dining hall selection filtering if applicable
+    if (selectedDiningHall) {
+      filtered = filtered.filter(
+        (item) => item.diningHall === selectedDiningHall
+      );
+    }
+
     setFilteredItems(filtered);
-  }, [items, temporaryPreferences]);
+  }, [items, temporaryPreferences, searchQuery, selectedDiningHall]);
+
 
   const handleRecordMeal = (item) => {
     if (!user) {
