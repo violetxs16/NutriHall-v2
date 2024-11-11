@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { css, Global } from '@emotion/react';
-import Header from './Components/Header';
+import Header from './Components/Header.jsx';
 import './styles/App.css';
 import { PreferencesProvider } from './contexts/PreferencesContext';
 
