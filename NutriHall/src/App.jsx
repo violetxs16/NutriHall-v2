@@ -15,6 +15,7 @@ import History from './Pages/History';
 import Menu from './Pages/Menu';
 import Settings from './Pages/Settings';
 import PrivateRoute from './components/PrivateRoute';
+import FoodDiary from './pages/FoodDiary';
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
                 <Route path="/" element={<Menu />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route
+                  path="/food-diary"
+                  element={
+                    <PrivateRoute>
+                      <FoodDiary />
+                    </PrivateRoute>
+                  }
+                />
                 <Route
                   path="/record-meal"
                   element={
