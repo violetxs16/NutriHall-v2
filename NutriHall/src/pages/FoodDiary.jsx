@@ -100,7 +100,7 @@ return (
                             <td style={styles.td}>{entry.carbs || 'N/A'}</td>
                             <td style={styles.td}>{entry.fat || 'N/A'}</td>
                             <td style={styles.td}>{entry.protein || 'N/A'}</td>
-                            <td style={styles.td}><button onClick={() => deleteRow(entry.id)}><img src='../src/assets/Red_X.svg.png' style={{blockSize: '25px'}}></img></button></td>
+                            <td style={styles.td}><button onClick={() => deleteRow(entry.id)}><img src='../src/assets/cross.gif' style={{blockSize: '25px'}}></img></button></td>
                         </tr>
                     ))}
                 </tbody>
