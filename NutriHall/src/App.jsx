@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { css, Global } from '@emotion/react';
 import Header from './components/Header';
-import './styles/app.css';
+import './styles/App.css';
 import { PreferencesProvider } from './contexts/PreferencesContext';
 
 // Components and Pages
