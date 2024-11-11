@@ -11,11 +11,11 @@ import Sidebar from './components/Sidebar.jsx';
 import Login from './components/Login.jsx';
 import Signup from './components/Signup.jsx';
 import RecordMeal from './components/RecordMeal.jsx';
-import History from './ages/History';
-import Menu from './pages/Menu';
-import Settings from './pages/Settings';
+import History from './pages/History.jsx';
+import Menu from './pages/Menu.jsx';
+import Settings from './pages/Settings.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
-import FoodDiary from './pages/FoodDiary';
+import FoodDiary from './pages/FoodDiary.jsx';
 
 function App() {
   return (
