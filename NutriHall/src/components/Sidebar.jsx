@@ -9,6 +9,9 @@ const Sidebar = () => {
   return (
     <div className="w-64 h-screen fixed top-16 left-0 bg-gray-800 text-white">
       <nav className="mt-4">
+        <NavLink to="/food-diary" className={linkClasses}>
+          Food Diary
+        </NavLink>
         <NavLink to="/record-meal" className={linkClasses}>
           Record Meal
         </NavLink>
