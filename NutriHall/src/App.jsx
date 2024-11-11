@@ -7,14 +7,14 @@ import './styles/App.css';
 import { PreferencesProvider } from './contexts/PreferencesContext';
 
 // Components and Pages
-import Sidebar from './components/Sidebar';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import RecordMeal from './components/RecordMeal';
+import Sidebar from './components/Sidebar.jsx';
+import Login from './components/Login.jsx';
+import Signup from './components/Signup.jsx';
+import RecordMeal from './components/RecordMeal.jsx';
 import History from './ages/History';
 import Menu from './pages/Menu';
 import Settings from './pages/Settings';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './components/PrivateRoute.jsx';
 import FoodDiary from './pages/FoodDiary';
 
 function App() {
