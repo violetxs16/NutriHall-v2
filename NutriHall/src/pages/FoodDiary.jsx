@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {ref, onValue, remove} from 'firebase/database';
 import {auth, database} from '../firebaseConfig';
+import '../styles/FoodDiary.css';
 
 function TodaysDate() {
     const date = new Date();
@@ -73,55 +74,45 @@ function FoodDiary() {
     }
 
 return (
-    <div style={{padding: '50px', fontFamily: 'sans-serif'}}>
-        <h2>Your Food Diary For:</h2>
-        <div style={{marginBottom: '30px'}}>
-            <button style={{fontSize: '30px'}}>&lt;</button>
-            <span style={{fontSize: '30px', margin: '0 10px'}}><TodaysDate /></span>
-            <button style={{fontSize: '30px'}}>&gt;</button>
-        </div>
-        <section>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                <thead>
-                    <tr>
-                        <th style={styles.th}>Item</th>
-                        <th style={styles.th}>Calories</th>
-                        <th style={styles.th}>Carbs</th>
-                        <th style={styles.th}>Fat</th>
-                        <th style={styles.th}>Protein</th>
-                        <th style={styles.th}>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {mealHistory.map((entry) => (
-                        <tr key = {entry.id}>
-                            <td style={styles.td}>{entry.title}</td>
-                            <td style={styles.td}>{entry.calories || 'N/A'}</td>
-                            <td style={styles.td}>{entry.carbs || 'N/A'}</td>
-                            <td style={styles.td}>{entry.fat || 'N/A'}</td>
-                            <td style={styles.td}>{entry.protein || 'N/A'}</td>
-                            <td style={styles.td}><button onClick={() => deleteRow(entry.id)}><img src='../src/assets/cross.gif' style={{blockSize: '25px'}}></img></button></td>
+    <div className="food-diary">
+            <h2>Your Food Diary For:</h2>
+            <div className="date-nav">
+                <button>&lt;</button>
+                <span><TodaysDate/></span>
+                <button>&gt;</button>
+            </div>
+            <section>
+                <table className="food-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Calories</th>
+                            <th>Carbs</th>
+                            <th>Fat</th>
+                            <th>Protein</th>
+                            <th>Remove</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </section>
+                    </thead>
+                    <tbody>
+                        {mealHistory.map((entry) => (
+                            <tr key={entry.id}>
+                                <td data-label="Item">{entry.title}</td>
+                                <td data-label="Calories">{entry.calories || 'N/A'}</td>
+                                <td data-label="Carbs">{entry.carbs || 'N/A'}</td>
+                                <td data-label="Fat">{entry.fat || 'N/A'}</td>
+                                <td data-label="Protein">{entry.protein || 'N/A'}</td>
+                                <td data-label="Remove">
+                                    <button onClick={() => deleteRow(entry.id)}>
+                                        <img src='../src/assets/cross.gif' alt="Delete" />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </section>
     </div>
-)
-}
-
-const styles = {
-    th: {
-        padding: '10px',
-        borderBottom: '5px solid #ddd',
-        background: '#f4f4f4',
-        textAlign: 'left'
-    },
-    td: {
-        padding: '10px',
-        borderBottom: '2px solid #ddd',
-        textAlign: 'left'
-    }
-}
+);
+};
 
 export default FoodDiary;
