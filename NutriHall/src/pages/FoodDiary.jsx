@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {ref, onValue, remove} from 'firebase/database';
 import {auth, database} from '../firebaseConfig';
 import '../styles/FoodDiary.css';
+import crossImg from '../assets/cross.gif';
 
 function TodaysDate() {
     const date = new Date();
@@ -17,30 +18,32 @@ function TodaysDate() {
 
 function FoodDiary() {
 
-    const [mealHistory, setMealHistory] = useState([]);
+    const [mealDiary, setMealDiary] = useState([]);
+    const [calorieData, setCalorieData] = useState([]);
+  const [calorieGoal, setCalorieGoal] = useState(2000);
     const user = auth.currentUser;
 
     useEffect(() => {
         if (!user) return;
 
-        const historyRef = ref(database, `users/${user.uid}/history`);
-        onValue(historyRef, (snapshot) => {
+        const diaryRef = ref(database, `users/${user.uid}/diary`);
+        onValue(diaryRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const historyList = Object.entries(data).map(([id, entry]) => ({
+                const diaryList = Object.entries(data).map(([id, entry]) => ({
                     id,
                     ...entry,
                 }));
 
                 // Sort entries in reverse chronological order
-                historyList.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
+                diaryList.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
 
-                setMealHistory(historyList);
+                setMealDiary(diaryList);
 
                 // Process data for the chart
                 const calorieDataMap = {};
 
-                historyList.forEach((entry) => {
+                diaryList.forEach((entry) => {
                     const date = entry.recordedAt.split('T')[0]; // Get date in YYYY-MM-DD format
                     const calories = parseInt(entry.calories) || 0;
 
@@ -61,17 +64,26 @@ function FoodDiary() {
 
                 setCalorieData(calorieDataArray);
             } else {
-                setMealHistory([]);
+                setMealDiary([]);
                 setCalorieData([]);
             }
         });
     }, [user]);
 
     const deleteRow = (id) => {
-        const entryRef = ref(database, `users/${user.uid}/history/${id}`);
-        setMealHistory((prevHistory) => prevHistory.filter((entry) => entry.id !== id));
-        remove(entryRef);
-    }
+        const diaryRef = ref(database, `users/${user.uid}/diary`);
+        onValue(diaryRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data){
+                const entryKey = Object.keys(data).find((key) => data[key].id === id);
+                if (entryKey){
+                    const entryRef = ref(database, `users/${user.uid}/diary/${entryKey}`);
+                    remove(entryRef);
+                    setMealDiary((prevDiary) => prevDiary.filter((entry) => entry.id !== id));
+                }
+            }
+        })
+    };
 
 return (
     <div className="food-diary">
@@ -94,7 +106,7 @@ return (
                         </tr>
                     </thead>
                     <tbody>
-                        {mealHistory.map((entry) => (
+                        {mealDiary.map((entry) => (
                             <tr key={entry.id}>
                                 <td data-label="Item">{entry.title}</td>
                                 <td data-label="Calories">{entry.calories || 'N/A'}</td>
@@ -103,7 +115,7 @@ return (
                                 <td data-label="Protein">{entry.protein || 'N/A'}</td>
                                 <td data-label="Remove">
                                     <button onClick={() => deleteRow(entry.id)}>
-                                        <img src='../src/assets/cross.gif' alt="Delete" />
+                                        <img src={crossImg} alt="Delete" />
                                     </button>
                                 </td>
                             </tr>
