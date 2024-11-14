@@ -31,7 +31,7 @@ const diningHalls = {
 
 // Function to clear existing data
 async function clearFoodTestData() {
-   return remove(ref(database, 'food-test'));
+   return remove(ref(database, 'food'));
 }
 
 
@@ -109,6 +109,32 @@ async function extractNutritionData(page) {
        });
 
 
+       // Extract dietary tags
+       const tags = [];
+       const labelSpan = document.querySelector('.labelwebcodesvalue');
+       if (labelSpan) {
+           const images = labelSpan.querySelectorAll('img');
+           images.forEach(img => {
+               const imgUrl = img.src;
+               if (imgUrl.includes('eggs')) tags.push('eggs');
+               if (imgUrl.includes('fish')) tags.push('fish');
+               if (imgUrl.includes('gluten')) tags.push('gluten_friendly');
+               if (imgUrl.includes('milk')) tags.push('milk');
+               if (imgUrl.includes('peanut')) tags.push('peanut');
+               if (imgUrl.includes('soy')) tags.push('soy');
+               if (imgUrl.includes('treenut')) tags.push('treenut');
+               if (imgUrl.includes('alcohol')) tags.push('alcohol');
+               if (imgUrl.includes('vegan')) tags.push('vegan');
+               if (imgUrl.includes('veggie')) tags.push('vegetarian');
+               if (imgUrl.includes('pork')) tags.push('pork');
+               if (imgUrl.includes('beef')) tags.push('beef');
+               if (imgUrl.includes('halal')) tags.push('halal');
+               if (imgUrl.includes('shellfish')) tags.push('shellfish');
+               if (imgUrl.includes('sesame')) tags.push('sesame');
+           });
+       }
+
+       nutrition.tags = tags;
        return nutrition;
    });
 }
@@ -127,12 +153,13 @@ function sanitizeFirebasePath(path) {
 async function writeFoodData(itemName, itemData) {
    try {
        const sanitizedName = sanitizeFirebasePath(itemName);
-       await set(ref(database, 'food-test/' + sanitizedName), {
+       await set(ref(database, 'food/' + sanitizedName), {
            name: itemName,  // Keep original name in data
            ingredients: itemData.ingredients,
            mealPeriods: itemData.mealPeriods,
            diningHalls: itemData.diningHalls,
-           nutrition: itemData.nutrition
+           nutrition: itemData.nutrition,
+           restrictions: itemData.nutrition.tags || [] // Add tags to Firebase data
        });
        console.log(`Wrote data for ${itemName}`);
    } catch (error) {
@@ -299,4 +326,3 @@ async function writeFoodData(itemName, itemData) {
    await browser.close();
    goOffline(database);
 })();
-
