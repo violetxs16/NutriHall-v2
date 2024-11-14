@@ -87,12 +87,14 @@ const MenuAll = ({ all, items, searchQuery, selectedDiningHall }) => {
       return;
     }
 
+    const diaryRef = ref(database, `users/${user.uid}/diary`);
     const historyRef = ref(database, `users/${user.uid}/history`);
     const newEntry = {
       ...item,
       recordedAt: new Date().toISOString(),
     };
 
+    push(diaryRef, newEntry)
     push(historyRef, newEntry)
       .then(() => {
         alert('Meal recorded successfully!');
