@@ -13,7 +13,7 @@ const Sidebar = () => {
           Food Diary
         </NavLink>
         <NavLink to="/record-meal" className={linkClasses}>
-          Record Meal
+          Generate Meal
         </NavLink>
         <NavLink to="/history" className={linkClasses}>
           History

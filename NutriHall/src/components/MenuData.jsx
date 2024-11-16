@@ -7,7 +7,7 @@ const useMenuData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const mealsRef = ref(database, 'food');
+    const mealsRef = ref(database, 'food-test');
 
     onValue(
       mealsRef,

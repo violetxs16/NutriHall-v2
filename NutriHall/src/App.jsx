@@ -23,9 +23,8 @@ function App() {
       <Router>
         <Header />
         <div className="flex">
-          {/* Sidebar component */}
-          <Sidebar />
-          <div className="flex-grow ml-64">
+
+          <div className="flex-grow ml-10">
             {/* Global Styling */}
             <Global
               styles={css`

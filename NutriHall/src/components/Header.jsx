@@ -1,102 +1,68 @@
 // src/components/Header.jsx
 import React, { useContext, useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import UserProfile from './UserProfile';
 import { PreferencesContext } from '../contexts/PreferencesContext';
-import { CSSTransition } from 'react-transition-group';
-import '../styles/Header.css'; // Import CSS for transitions
 
 const Header = () => {
   const { temporaryPreferences, setTemporaryPreferences } = useContext(PreferencesContext);
-  const [showRestrictions, setShowRestrictions] = useState(true);
+  const [showPreferences, setShowPreferences] = useState(true);
 
-  const dietaryOptions = [
-    'vegan',
-    'soy',
-    'gluten',
-    'alcohol',
-    'beef',
-    'eggs',
-    'fish',
-    'halal',
-    'milk',
-    'nuts',
-    'pork',
-    'sesame',
-    'shellfish',
-    'treenut',
-    'veggie',
-  ];
-
-  const handleToggle = (option) => {
-    setTemporaryPreferences((prev) => ({
-      ...prev,
-      dietaryRestrictions: {
-        ...prev.dietaryRestrictions,
-        [option]: !prev.dietaryRestrictions[option],
-      },
-    }));
+  const togglePreferences = () => {
+    setShowPreferences((prev) => !prev);
   };
 
-
-  const toggleRestrictions = () => {
-    setShowRestrictions((prev) => !prev);
-  };
-
-  // Auto-close restrictions when viewport is too narrow
+  // Load saved preferences on refresh
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1600 && showRestrictions) {
-        setShowRestrictions(false);
-      }
-    };
+    const savedPreferences = JSON.parse(localStorage.getItem('preferences'));
+    if (savedPreferences) {
+      setTemporaryPreferences(savedPreferences);
+    }
+  }, [setTemporaryPreferences]);
 
-    window.addEventListener('resize', handleResize);
-    // Initial check
-    handleResize();
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, [showRestrictions]);
+  // Save preferences to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('preferences', JSON.stringify(temporaryPreferences));
+  }, [temporaryPreferences]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex items-center p-4 bg-gray-800 text-white space-x-6">
-      {/* Company title */}
-      <div className="text-xl font-bold mr-10">NutriHall</div>
+    <header className="fixed top-0 left-0 right-0 z-25 flex flex-col bg-gray-800 text-white">
+      {/* Top Row: Company Title, Centered Navigation Links, and User Profile */}
+      <div className="flex items-center justify-between p-4">
+        {/* Company Title */}
+        <div className="text-xl font-bold mr-4">NutriHall</div>
 
-      {/* Preferences */}
-      <div className="flex items-center space-x-10">
-        {/* Dietary Restrictions */}
-        <div className="flex items-center">
-          <button onClick={toggleRestrictions} className="mr-4">
-            Restrictions
-          </button>
-          <CSSTransition
-            in={showRestrictions}
-            timeout={300}
-            classNames="restrictions"
-            unmountOnExit
-          >
-            <div className="flex space-x-4">
-              {dietaryOptions.map((option) => (
-                <label key={option} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={temporaryPreferences.dietaryRestrictions[option] || false}
-                    onChange={() => handleToggle(option)}
-                    className="mr-1"
-                  />
-                  <span>{option.charAt(0).toUpperCase() + option.slice(1)}</span>
-                </label>
-              ))}
-            </div>
-          </CSSTransition>
-        </div>
+        {/* Centered Navigation Links */}
+        <nav className="flex space-x-4 mx-auto">
+          <NavLink to="/food-diary" className="hover:underline">
+            Food Diary
+          </NavLink>
+          <NavLink to="/record-meal" className="hover:underline">
+            Generate Meal
+          </NavLink>
+          <NavLink to="/history" className="hover:underline">
+            History
+          </NavLink>
+          <NavLink to="/menu" className="hover:underline">
+            Menu
+          </NavLink>
+          <NavLink to="/settings" className="hover:underline">
+            Settings
+          </NavLink>
+        </nav>
+
+        {/* User Profile */}
+        <UserProfile />
       </div>
 
-      {/* Spacer */}
-      <div className="flex-grow"></div>
-
-      {/* User profile */}
-      <UserProfile />
+      {/* Search Bar and Preferences */}
+      <div className="p-1">
+        {showPreferences && (
+          <div className="">
+            {/* Maybe Preferences Content */}
+          </div>
+        )}
+      </div>
     </header>
   );
 };

@@ -57,16 +57,30 @@ const Menu = () => {
   // Define dining halls with positions
   const diningHalls = [
     {
-      name: 'Cowell-Stevenson',
-      top: '20%',
-      left: '30%',
+      name: 'Cowell-Stevenson Dining Hall',
+      top: '48%',
+      left: '80%',
     },
     {
-      name: 'Crown-Merrill',
-      top: '25%',
-      left: '40%',
+      name: 'Crown-Merrill Dining Hall',
+      top: '32%',
+      left: '72%',
     },
-    // Add other dining halls with adjusted positions
+    {
+      name: 'College Nine/John R Lewis Dining Hall',
+      top: '20%',
+      left: '65%',
+    },
+    {
+      name: 'Rachel Carson/Oakes Dining Hall',
+      top: '60%',
+      left: '45%',
+    },
+    {
+      name: 'Porter/Kresge Dining Hall',
+      top: '58%',
+      left: '35%',
+    },
   ];
 
 
@@ -128,7 +142,7 @@ const Menu = () => {
       )}
       {searchQuery === '' && !selectedDiningHall ? (
         // Show the background image and buttons
-        <div className="relative" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
+        <div className="relative w-full max-w-full" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
           <img
             src={backgroundImage}
             alt="UCSC Map"
@@ -144,12 +158,16 @@ const Menu = () => {
               style={{
                 top: hall.top,
                 left: hall.left,
-                width: '50px',
-                height: '50px',
+                width: '5%', // Use percentage for width
+                height: '0',
+                paddingBottom: '5%', // To maintain square aspect ratio
                 position: 'absolute',
                 borderRadius: '50%',
-                opacity: 0,
+                border: '2px solid red', // Red border for clear boundaries
+                backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                opacity: 1,
                 cursor: 'pointer',
+                transform: 'translate(-50%, -50%)', // Center the button
               }}
               aria-label={`Select ${hall.name} Dining Hall`}
               >

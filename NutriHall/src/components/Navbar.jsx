@@ -49,7 +49,7 @@ const Navbar = ({ setAll, setBreakfast, setLunch, setShakes }) => {
         }
       `}
     >
-      <h3 className="logo">Exper.</h3>
+      <h3 className="logo">NutriHall</h3>
       <Buttons
         className="Buttons"
         setAll={setAll}
