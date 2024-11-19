@@ -48,10 +48,10 @@ Reusable components used across the project.
 - **`MenuItems.jsx`**  
   Handles the rendering and layout of all menu items across categories.
 
-- **`MenuLunch.jsx`**  
+- **`MenuLunch.jsx`**  *(Deprecated)* 
   Displays the lunch menu with preference-based filtering.
 
-- **`MenuShakes.jsx`**  
+- **`MenuShakes.jsx`** *(Deprecated)*  
   Displays shake menu options filtered by dietary restrictions.
 
 - **`Navbar.jsx`**  
@@ -86,8 +86,8 @@ Provides context APIs for managing application state.
 - **`PreferencesContext.jsx`**  
   Handles the global state for dietary preferences and calorie settings.
 
-- **`ThemeContext.jsx`** *(Deprecated)*  
-  Managed the global theme for the application (currently being removed).
+- **`ThemeContext.jsx`**  
+  Managed the global theme for the application.
 
 ---
 
