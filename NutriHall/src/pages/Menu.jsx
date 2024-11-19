@@ -16,8 +16,9 @@ const Menu = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [preferences, setPreferences] = useState(null);
   const [all, setAll] = useState(true);
-  const [breakfast, setBreakfast] = useState(false);
-  const [lunch, setLunch] = useState(false);
+  const [breakfast, setBreakfast] = useState(true);
+  const [lunch, setLunch] = useState(true);
+  const [dinner, setDinner] = useState(true);
   const [shakes, setShakes] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiningHall, setSelectedDiningHall] = useState(null);
@@ -188,6 +189,7 @@ const Menu = () => {
           setAll={setAll}
           setBreakfast={setBreakfast}
           setLunch={setLunch}
+          setDinner={setDinner}
           setShakes={setShakes}
         />
         {/* MenuItems Component */}
@@ -196,6 +198,7 @@ const Menu = () => {
           all={all}
           breakfast={breakfast}
           lunch={lunch}
+          dinner={dinner}
           shakes={shakes}
           searchQuery={searchQuery}
           selectedDiningHall={selectedDiningHall}

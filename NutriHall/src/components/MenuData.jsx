@@ -7,7 +7,7 @@ const useMenuData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const mealsRef = ref(database, 'food-test');
+    const mealsRef = ref(database, 'food');
 
     onValue(
       mealsRef,
@@ -18,13 +18,12 @@ const useMenuData = () => {
           const mealList = Object.entries(data).map(([id, item]) => ({
             id, // unique Firebase key
             title: item.name || "Untitled",
-            category: item.category || "uncategorized",
+            mealPeriods: item.mealPeriods || "uncategorized",
             price: item.price || 0,
             desc: item.description || "No description available",
             restrictions: item.restrictions || [],
-            calories: item.calories || 0,
-            protein: item.protein || 0,
             diningHall: item.diningHall || 'Unknown',
+            nutrition: item.nutrition || '0',
           }));
 
           setMenuData(mealList);

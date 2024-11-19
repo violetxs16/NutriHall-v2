@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 import AllItems from "./MenuAll";
 import Breakfast from "./MenuBreakfast";
 import Lunch from "./MenuLunch";
+import Dinner from "./MenuDinner";
 import Shakes from "./MenuShakes";
 
-const MenuItems = ({ items, all, breakfast, lunch, shakes, searchQuery, selectedDiningHall }) => {
+const MenuItems = ({ items, all, breakfast, lunch, dinner, shakes, searchQuery, selectedDiningHall }) => {
   const container = {
     hidden: { opacity: 0 },
     visible: {
@@ -104,8 +105,9 @@ const MenuItems = ({ items, all, breakfast, lunch, shakes, searchQuery, selected
       `}
     >
       <AllItems all={all} items={items} searchQuery={searchQuery} selectedDiningHall={selectedDiningHall} />
-      <Breakfast breakfast={breakfast} items={items} />
-      <Lunch lunch={lunch} items={items} />
+      <Breakfast breakfast={breakfast} items={items} searchQuery={searchQuery} selectedDiningHall={selectedDiningHall}/>
+      <Lunch lunch={lunch} items={items} searchQuery={searchQuery} selectedDiningHall={selectedDiningHall}/>
+      <Dinner dinner={dinner} items={items} searchQuery={searchQuery} selectedDiningHall={selectedDiningHall}/>
       <Shakes shakes={shakes} items={items} />
     </motion.div>
   );

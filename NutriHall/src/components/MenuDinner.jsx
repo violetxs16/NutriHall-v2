@@ -41,7 +41,7 @@ const restrictionImages = {
   veggie: veggieImg,
 };
 
-const MenuBreakfast = ({ breakfast, items, searchQuery, selectedDiningHall }) => {
+const MenuDinner = ({ dinner, items, searchQuery, selectedDiningHall }) => {
   const { temporaryPreferences } = useContext(PreferencesContext);
   const [filteredItems, setFilteredItems] = useState([]);
   const user = auth.currentUser;
@@ -107,8 +107,8 @@ const MenuBreakfast = ({ breakfast, items, searchQuery, selectedDiningHall }) =>
 
   return (
     <>
-      {breakfast &&
-        items.filter((item) => Array.isArray(item.mealPeriods) && item.mealPeriods.includes("breakfast")).map((item) => (
+      {dinner &&
+        items.filter((item) => Array.isArray(item.mealPeriods) && item.mealPeriods.includes("dinner")).map((item) => (
           <div className="menu-items" key={item.id}>
             <div className="item-content">
               <div className="item-title-box">
@@ -154,4 +154,4 @@ const MenuBreakfast = ({ breakfast, items, searchQuery, selectedDiningHall }) =>
   );
 };
 
-export default MenuBreakfast;
+export default MenuDinner;

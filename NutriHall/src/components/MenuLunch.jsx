@@ -1,35 +1,155 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+import React, { useContext, useEffect, useState } from 'react';
+import { PreferencesContext } from '../contexts/PreferencesContext';
+import { auth, database } from '../firebaseConfig';
+import { ref, push } from 'firebase/database';
+import { ThemeContext } from '../contexts/ThemeContext';
 
-const MenuLunch = ({ lunch, items }) => {
-  const itemContainer = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
+// Import all restriction images
+import veganImg from '../assets/vegan.gif';
+import alcoholImg from '../assets/alcohol.gif';
+import beefImg from '../assets/beef.gif';
+import fishImg from '../assets/fish.gif';
+import glutenImg from '../assets/gluten.gif';
+import halalImg from '../assets/halal.gif';
+import nutsImg from '../assets/nuts.gif';
+import porkImg from '../assets/pork.gif';
+import shellfishImg from '../assets/shellfish.gif';
+import treenutImg from '../assets/treenut.gif';
+import soyImg from '../assets/soy.gif';
+import sesameImg from '../assets/sesame.gif';
+import milkImg from '../assets/milk.gif';
+import eggsImg from '../assets/eggs.gif';
+import veggieImg from '../assets/veggie.gif';
+
+// Define the restrictionImages object
+const restrictionImages = {
+  vegan: veganImg,
+  alcohol: alcoholImg,
+  beef: beefImg,
+  fish: fishImg,
+  gluten: glutenImg,
+  halal: halalImg,
+  nuts: nutsImg,
+  pork: porkImg,
+  shellfish: shellfishImg,
+  treenut: treenutImg,
+  soy: soyImg,
+  sesame: sesameImg,
+  milk: milkImg,
+  eggs: eggsImg,
+  veggie: veggieImg,
+};
+
+const MenuLunch = ({ lunch, items, searchQuery, selectedDiningHall }) => {
+  const { temporaryPreferences } = useContext(PreferencesContext);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const user = auth.currentUser;
+
+  useEffect(() => {
+    const { dietaryRestrictions } = temporaryPreferences;
+
+    const activeRestrictions = Object.keys(dietaryRestrictions).filter(
+      (key) => dietaryRestrictions[key]
+    );
+
+    let filtered = items.filter((item) => {
+      // Exclude items that match any active dietary restrictions
+      for (let restriction of activeRestrictions) {
+        if (item.restrictions.includes(restriction)) {
+          return false; // Exclude this item
+        }
+      }
+      return true; // Include this item
+    });
+
+    // Apply search query filtering
+    if (searchQuery) {
+      filtered = filtered.filter((item) =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Apply dining hall selection filtering if applicable
+    if (selectedDiningHall) {
+      filtered = filtered.filter(
+        (item) => item.diningHall === selectedDiningHall
+      );
+    }
+
+    setFilteredItems(filtered);
+  }, [items, temporaryPreferences, searchQuery, selectedDiningHall]);
+
+
+  const handleRecordMeal = (item) => {
+    if (!user) {
+      alert('Please log in to record meals.');
+      return;
+    }
+
+    const diaryRef = ref(database, `users/${user.uid}/diary`);
+    const historyRef = ref(database, `users/${user.uid}/history`);
+    const newEntry = {
+      ...item,
+      recordedAt: new Date().toISOString(),
+    };
+
+    push(diaryRef, newEntry)
+    push(historyRef, newEntry)
+      .then(() => {
+        alert('Meal recorded successfully!');
+      })
+      .catch((error) => {
+        console.error('Error recording meal:', error);
+      });
   };
+
 
   return (
     <>
       {lunch &&
-        items
-          .filter((item) => item.category === "lunch")
-          .map((item, i) => (
-            <motion.div
-              className="menu-items"
-              key={item.id}
-              variants={itemContainer}
-              transition={{ delay: i * 0.2 }}
-            >
-              <motion.div className="item-content">
-                <motion.div className="item-title-box">
-                  <motion.h5 className="item-title">{item.title}</motion.h5>
-                  <motion.h5 className="item-price">${item.price}</motion.h5>
-                </motion.div>
-                <motion.p className="item-desc">{item.desc}</motion.p>
-              </motion.div>
-            </motion.div>
-          ))}
+        items.filter((item) => Array.isArray(item.mealPeriods) && item.mealPeriods.includes("lunch")).map((item) => (
+          <div className="menu-items" key={item.id}>
+            <div className="item-content">
+              <div className="item-title-box">
+                <h5 className="item-title">{item.title}</h5>
+                <div className="item-image-restrictions">
+                  {item.restrictions.map((restriction) =>
+                    restrictionImages[restriction] ? (
+                      <img
+                        key={restriction}
+                        src={restrictionImages[restriction]}
+                        alt={restriction}
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          borderRadius: '50%',
+                          marginRight: '5px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : null
+                  )}
+                </div>
+              </div>
+              <div className="item-restrictions">
+                {item.restrictions.length > 0 ? (
+                  <p>Restrictions: {item.restrictions.join(', ')}</p>
+                ) : (
+                  <p>No restrictions</p>
+                )}
+              </div>
+              {/* Record Meal Button */}
+              <button
+                onClick={() => handleRecordMeal(item)}
+                className="mt-2 px-2 py-2 bg-green-200 text-#1F2937 rounded w-40"
+                //className="btn btn-primary"
+              >
+                Record Meal
+              </button>
+            </div>
+          </div>
+        ))}
     </>
   );
 };
