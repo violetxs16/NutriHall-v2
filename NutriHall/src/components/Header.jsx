@@ -1,18 +1,40 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+// src/components/Header.jsx
+import React, { useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import UserProfile from './UserProfile';
 import { PreferencesContext } from '../contexts/PreferencesContext';
+import userImg from '../assets/user.jpg';
+import diaryImg from '../assets/Diary.png';
+import mealImg from '../assets/Meal.png';
+import menuImg from '../assets/Menu.png';
+import historyImg from '../assets/History.png';
+import settingsImg from '../assets/settings.png';
+import { auth } from '../firebaseConfig';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { temporaryPreferences, setTemporaryPreferences } = useContext(PreferencesContext);
   const [showPreferences, setShowPreferences] = useState(true);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
-  const buttonRef = useRef(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const togglePreferences = () => {
     setShowPreferences((prev) => !prev);
   };
+
+  const handleDropdownToggle = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const handleLinkClick = () => {
+    setShowDropdown(false);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      auth.signOut();
+      NavLink('/login');
+    }
+  }
 
   // Load saved preferences on refresh
   useEffect(() => {
@@ -27,126 +49,65 @@ const Header = () => {
     localStorage.setItem('preferences', JSON.stringify(temporaryPreferences));
   }, [temporaryPreferences]);
 
-  // Handle menu toggle for mobile
-  const handleMenuToggle = () => {
-    setIsMenuOpen((prev) => !prev);
-  };
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target)
-      ) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-25 bg-gray-800 text-white z-20">
-      {/* Top Row: Company Title, Centered Navigation Links, and User Profile */}
-      <div className="flex items-center justify-between p-4">
-        {/* Company Title */}
-        <NavLink to="/menu" className="text-xl font-bold hover:underline">
-          NutriHall
-        </NavLink>
-
-        {/* Navigation Links */}
-        <div className="hidden md:flex flex-1 justify-center">
-          <nav className="flex space-x-6 items-center">
-            <NavLink to="/food-diary" className="py-2 hover:underline flex items-center">
-              <img src="/assets/diary.png" alt="Diary Icon" className="w-5 h-5 mr-2" />
-              Food Diary
-            </NavLink>
-            <NavLink to="/record-meal" className="py-2 hover:underline flex items-center">
-              <img src="/assets/meal.png" alt="Meal Icon" className="w-5 h-5 mr-2" />
-              Generate Meal
-            </NavLink>
-            <NavLink to="/history" className="py-2 hover:underline flex items-center">
-              <img src="/assets/history.png" alt="History Icon" className="w-5 h-5 mr-2" />
-              History
-            </NavLink>
-            <NavLink to="/menu" className="py-2 hover:underline flex items-center">
-              <img src="/assets/menu.png" alt="Menu Icon" className="w-5 h-5 mr-2" />
-              Menu
-            </NavLink>
-            <NavLink to="/settings" className="py-2 hover:underline flex items-center">
-              <img src="/assets/settings.png" alt="Settings Icon" className="w-5 h-5 mr-2" />
-              Settings
-            </NavLink>
-          </nav>
-        </div>
-
-        {/* User Profile */}
-        <div className="hidden md:block">
-          <UserProfile />
-        </div>
-
-        {/* Menu Button for Mobile */}
-        <div className="md:hidden">
-          <button
-            ref={buttonRef}
-            onClick={handleMenuToggle}
-            aria-label="Toggle Menu"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMenuOpen ? (
+    <header className="fixed top-0 left-0 right-0 z-25 flex flex-col text-white bg-gray-800">
+      <div className="navbar bg-base-100">
+        <div className="navbar-start">
+          <div className="dropdown">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle" onClick={handleDropdownToggle}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h7" />
+              </svg>
+            </div>
+            {showDropdown && (
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1050] mt-3 w-52 p-2 shadow">
+                <li><a onClick={handleLinkClick}><NavLink to="/food-diary" className="flex items-center space-x-2"><img src={diaryImg} className="w-6 h-6"/> Food Diary</NavLink></a></li>
+                <li><a onClick={handleLinkClick}><NavLink to="/record-meal" className="flex items-center space-x-2"><img src={mealImg} className="w-6 h-6"/> AI Meal Generation</NavLink></a></li>
+                <li><a onClick={handleLinkClick}><NavLink to="/menu" className="flex items-center space-x-2"><img src={menuImg} className="w-6 h-6"/> Menu</NavLink></a></li>
+                <li><a onClick={handleLinkClick}><NavLink to="/history" className="flex items-center space-x-2"><img src={historyImg} className="w-6 h-6"/> History</NavLink></a></li>
+                <li><a onClick={handleLinkClick}><NavLink to="/settings" className="flex items-center space-x-2"><img src={settingsImg} className="w-6 h-6"/> Settings</NavLink></a></li>
+              </ul>
+            )}
+          </div>
+        </div>
+        <div className="navbar-center">
+          <a className="btn btn-ghost text-xl" onClick={handleLinkClick}><NavLink to="/menu">NutriHall</NavLink></a>
+        </div>
+        <div className="navbar-end">
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar" onClick={handleDropdownToggle}>
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src={userImg} />
+              </div>
+            </div>
+            {showDropdown && (
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                <li>
+                  <a className="justify-between" onClick={handleLinkClick}>
+                  <NavLink to="/settings">Profile</NavLink>
+                  </a>
+                </li>
+                <li><a onClick={handleLogout}>Logout</a></li>
+              </ul>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Navigation Links for Mobile */}
-      <nav
-        ref={menuRef}
-        className={`${
-          isMenuOpen ? 'block' : 'hidden'
-        } md:hidden flex flex-col items-center bg-gray-800 text-white`}
-      >
-        <NavLink to="/food-diary" className="py-2 hover:underline">
-          Food Diary
-        </NavLink>
-        <NavLink to="/record-meal" className="py-2 hover:underline">
-          Generate Meal
-        </NavLink>
-        <NavLink to="/history" className="py-2 hover:underline">
-          History
-        </NavLink>
-        <NavLink to="/menu" className="py-2 hover:underline">
-          Menu
-        </NavLink>
-        <NavLink to="/settings" className="py-2 hover:underline pb-6">
-          Settings
-        </NavLink>
-      </nav>
     </header>
   );
 };
