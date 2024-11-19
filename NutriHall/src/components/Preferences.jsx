@@ -1,15 +1,14 @@
 // src/components/Preferences.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { ref, onValue, set } from 'firebase/database';
 import { calculateCalorieRange } from '../utils/calorieCalculator';
+import { PreferencesContext } from '../contexts/PreferencesContext';
+
 
 const Preferences = () => {
-  const [preferences, setPreferences] = useState({
-    dietaryRestrictions: {},
-    calorieRange: 2000,
-    goal: 'default', // 'cut', 'default', 'bulk'
-  });
+  const { temporaryPreferences, setTemporaryPreferences } = useContext(PreferencesContext);
+  const [preferences, setPreferences] = useState(temporaryPreferences);
 
   const user = auth.currentUser;
 
@@ -46,10 +45,11 @@ const Preferences = () => {
         const prefsData = snapshot.val();
         if (prefsData) {
           setPreferences(prefsData);
+          setTemporaryPreferences(prefsData); 
         }
       });
     }
-  }, [user]);
+  }, [user, setTemporaryPreferences]);
   
 
   const dietaryOptions = [
@@ -85,6 +85,7 @@ const Preferences = () => {
     set(prefsRef, preferences)
       .then(() => {
         alert('Preferences saved!');
+        setTemporaryPreferences(preferences);
       })
       .catch((error) => {
         console.error('Error saving preferences:', error);
@@ -104,7 +105,7 @@ const Preferences = () => {
                 type="checkbox"
                 checked={preferences.dietaryRestrictions[option] || false}
                 onChange={() => handleToggle(option)}
-                className="mr-2"
+                className="mr-2 bg-white"
               />
               {option.charAt(0).toUpperCase() + option.slice(1)}
             </label>
@@ -123,7 +124,7 @@ const Preferences = () => {
               calorieRange: parseInt(e.target.value) || 0,
             }))
           }
-          className="border px-3 py-2 rounded w-full"
+          className="border px-3 py-2 rounded w-full bg-white"
         />
       </div>
 

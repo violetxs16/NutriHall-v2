@@ -3,6 +3,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { auth, database } from '../firebaseConfig';
 import { ref, push } from 'firebase/database';
+import { ThemeContext } from '../contexts/ThemeContext';
+
 // Import all restriction images
 import veganImg from '../assets/vegan.gif';
 import alcoholImg from '../assets/alcohol.gif';

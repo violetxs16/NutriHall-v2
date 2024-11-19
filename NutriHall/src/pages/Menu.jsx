@@ -1,5 +1,5 @@
 // src/Pages/Menu.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { ref, onValue } from 'firebase/database';
 import Navbar from '../components/Navbar';
@@ -7,6 +7,8 @@ import MenuItems from '../components/MenuItems';
 import useMenuData from '../components/MenuData';
 import MenuAll from '../components/MenuAll';
 import backgroundImage from '../assets/ucsc_map.jpg';
+import RestrictionHeader from '../components/RestrictionHeader';
+import { PreferencesContext } from '../contexts/PreferencesContext';
 import '../styles/main.css'
 
 const Menu = () => {
@@ -124,25 +126,28 @@ const Menu = () => {
 
   return (
     <div className="p-6">
+      {/* Adjusted margin-top to account for fixed header height */}
       <h1 className="text-2xl mb-4">Menu</h1>
       <input
         type="text"
         placeholder="Search for food..."
         value={searchQuery}
         onChange={handleSearchChange}
-        className="border px-3 py-2 rounded w-full mb-4"
+        className="input input-bordered w-full mb-4 bg-white text-black"
       />
       {(searchQuery !== '' || selectedDiningHall) && (
-        <button
-          onClick={clearSelection}
-          className="mb-4 px-4 py-2 bg-gray-200 text-black rounded"
-        >
-          Back to Map
-        </button>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center space-x-4">
+            <button onClick={clearSelection}   className="btn bg-blue-800 text-white hover:bg-blue-900 transition duration-200 ease-in-out transform hover:scale-105">
+              Back to Map
+            </button>
+            <RestrictionHeader />
+          </div>
+        </div>
       )}
       {searchQuery === '' && !selectedDiningHall ? (
         // Show the background image and buttons
-        <div className="relative w-full max-w-full" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
+        <div className="relative w-full max-w-full z-0" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
           <img
             src={backgroundImage}
             alt="UCSC Map"

@@ -24,7 +24,7 @@ function App() {
         <Header />
         <div className="flex">
 
-          <div className="flex-grow ml-10">
+          <div className="flex-grow ml-2">
             {/* Global Styling */}
             <Global
               styles={css`
