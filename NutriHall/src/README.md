@@ -9,6 +9,8 @@ NutriHall is a web application designed to assist users in managing their food p
 ## `src` Folder and File Structure
 The root folder of the application contains all the core files and subdirectories.
 
+---
+
 ### `assets`
 This folder contains all the images and assets used throughout the project.
 
