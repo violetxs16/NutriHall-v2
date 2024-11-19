@@ -143,7 +143,7 @@ const Header = () => {
         <NavLink to="/menu" className="py-2 hover:underline">
           Menu
         </NavLink>
-        <NavLink to="/settings" className="py-2 hover:underline">
+        <NavLink to="/settings" className="py-2 hover:underline pb-6">
           Settings
         </NavLink>
       </nav>
