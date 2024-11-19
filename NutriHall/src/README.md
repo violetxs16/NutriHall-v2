@@ -4,7 +4,6 @@
 
 NutriHall is a web application designed to assist users in managing their food preferences, tracking meals, and generating dietary insights. The application integrates Firebase for user authentication and data storage.
 
----
 
 ## `src` Folder and File Structure
 The root folder of the application contains all the core files and subdirectories.
