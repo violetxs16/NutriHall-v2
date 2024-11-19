@@ -1,12 +1,14 @@
 // src/components/Settings.jsx
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Preferences from '../components/Preferences';
 import EditAccount from '../components/EditAccount';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState('preferences');
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -36,13 +38,8 @@ const Settings = () => {
         >
           Edit Account
         </button>
-        <button
-          className="px-4 py-2 mb-2 md:mb-0"
-          onClick={() => {
-            document.documentElement.classList.toggle('dark');
-          }}
-        >
-          Toggle Dark Mode
+        <button onClick={toggleTheme} className="btn btn-ghost">
+          {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
         </button>
         <button
           className="px-4 py-2 text-red-500 mb-2 md:mb-0"

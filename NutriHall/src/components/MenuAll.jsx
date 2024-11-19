@@ -145,6 +145,7 @@ const MenuAll = ({ all, items, searchQuery, selectedDiningHall }) => {
               <button
                 onClick={() => handleRecordMeal(item)}
                 className="mt-2 px-2 py-2 bg-green-200 text-#1F2937 rounded w-40"
+                //className="btn btn-primary"
               >
                 Record Meal
               </button>

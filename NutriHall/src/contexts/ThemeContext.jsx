@@ -5,15 +5,15 @@ export const ThemeContext = createContext();
 
 const ThemeProvider = ({ children }) => {
   const storedTheme = localStorage.getItem('theme');
-  const [theme, setTheme] = useState(storedTheme || 'light');
+  const [theme, setTheme] = useState(storedTheme || 'mytheme');
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
-    document.documentElement.className = theme;
+    document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((curr) => (curr === 'light' ? 'dark' : 'light'));
+    setTheme((curr) => (curr === 'mytheme' ? 'dark' : 'mytheme'));
   };
 
   return (
