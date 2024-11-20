@@ -20,6 +20,7 @@ module.exports = {
           success: '#10b981',
           warning: '#f59e0b',
           error: '#ef4444',
+          '--slug-yellow': '#FFD700',
         },
       },
       {
@@ -34,6 +35,7 @@ module.exports = {
           success: '#10b981',
           warning: '#f59e0b',
           error: '#ef4444',
+          '--slug-yellow': '#FFD700',
         },
       },
     ],
