@@ -148,7 +148,7 @@ const Menu = () => {
       )}
       {searchQuery === '' && !selectedDiningHall ? (
         // Show the background image and buttons
-        <div className="relative w-full max-w-full z-0" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
+        <div className="relative w-full max-w-full z-10" style={{ maxHeight: '80vh', overflow: 'hidden' }}>
           <img
             src={backgroundImage}
             alt="UCSC Map"
