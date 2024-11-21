@@ -10,6 +10,8 @@ const History = () => {
   const [mealHistory, setMealHistory] = useState([]);
   const [calorieData, setCalorieData] = useState([]);
   const [calorieGoal, setCalorieGoal] = useState(2000); // Default value
+  const [proteinGoal, setProteinGoal] = useState(100); // Default value
+  
   const user = auth.currentUser;
 
   useEffect(() => {
@@ -40,6 +42,8 @@ const History = () => {
               accountInfo.age
             );
             setCalorieGoal(calculatedCalorieGoal);
+            // User's protein goal (you may need to fetch this from preferences or accountInfo)
+            setProteinGoal(Math.round(accountInfo.weight * 2.2 * 0.8)); // Calculated value of expected protein goal
           }
         });
       }
@@ -65,7 +69,8 @@ const History = () => {
 
         historyList.forEach((entry) => {
           const date = entry.recordedAt.split('T')[0]; // Get date in YYYY-MM-DD format
-          const calories = parseInt(entry.calories) || 0;
+          console.log(parseInt(entry.nutrition.calories))
+          const calories = parseInt(entry.nutrition.calories) || 0;
 
           if (calorieDataMap[date]) {
             calorieDataMap[date] += calories;
@@ -108,12 +113,10 @@ const History = () => {
   // Calculate total calories and protein consumed today
   const today = new Date().toISOString().split('T')[0];
   const todayMeals = mealHistory.filter((entry) => entry.recordedAt.startsWith(today));
-  const totalCaloriesConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.calories) || 0), 0);
-  const totalProteinConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.protein) || 0), 0);
+  const totalCaloriesConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.nutrition.calories) || 0), 0);
+  const totalProteinConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.nutrition.protein) || 0), 0);
 
-  // User's protein goal (you may need to fetch this from preferences or accountInfo)
-  const proteinGoal = 150; // Example value
-
+  
   // Calculate percentages
   const caloriePercentage = Math.min((totalCaloriesConsumed / calorieGoal) * 100, 100);
   const proteinPercentage = Math.min((totalProteinConsumed / proteinGoal) * 100, 100);
@@ -203,8 +206,8 @@ const History = () => {
             <div key={entry.id} className="border p-4 mb-4 rounded">
               <h3 className="text-lg">{entry.title}</h3>
               <p>{entry.desc}</p>
-              <p>Calories: {entry.calories || 'N/A'}</p>
-              <p>Protein: {entry.protein || 'N/A'}g</p>
+              <p>Calories: {entry.nutrition.calories || 'N/A'}</p>
+              <p>Protein: {entry.nutrition.protein || 'N/A'}</p>
               <p>
                 Recorded At: {new Date(entry.recordedAt).toLocaleString()}
               </p>
