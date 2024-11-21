@@ -1,11 +1,14 @@
+// src/Pages/Menu.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { ref, onValue } from 'firebase/database';
 import Navbar from '../components/Navbar';
 import MenuItems from '../components/MenuItems';
 import useMenuData from '../components/MenuData';
+import MenuAll from '../components/MenuAll';
 import backgroundImage from '../assets/ucsc_map.jpg';
 import RestrictionHeader from '../components/RestrictionHeader';
+import { PreferencesContext } from '../contexts/PreferencesContext';
 import DiningHallButtons from '../components/DiningHallButtons';
 import '../styles/main.css';
 
@@ -45,21 +48,56 @@ const Menu = () => {
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
+    setSelectedDiningHall(null); // Hide the image and buttons when search is active
   };
 
   const handleDiningHallClick = (diningHallName) => {
     setSelectedDiningHall(diningHallName);
-    setSearchQuery(''); // Clear the search query when selecting a dining hall
+    setSearchQuery(''); // Clear search query when a dining hall is selected
   };
 
   const clearSelection = () => {
     setSelectedDiningHall(null);
-    setSearchQuery(''); // Reset both search and dining hall selection
+    setSearchQuery('');
   };
 
   if (error) {
     return <div>Error loading menu: {error}</div>;
   }
+
+  // Define dining halls with positions
+  const diningHalls = [
+    {
+      name: 'Cowell-Stevenson Dining Hall',
+      top: '48%',
+      left: '80%',
+    },
+    {
+      name: 'Crown-Merrill Dining Hall',
+      top: '32%',
+      left: '72%',
+    },
+    {
+      name: 'College Nine/John R Lewis Dining Hall',
+      top: '20%',
+      left: '65%',
+    },
+    {
+      name: 'Rachel Carson/Oakes Dining Hall',
+      top: '60%',
+      left: '45%',
+    },
+    {
+      name: 'Porter/Kresge Dining Hall',
+      top: '58%',
+      left: '35%',
+    },
+    {
+      name: 'Cafe', // Assuming 'Cafe' is the last one
+      top: '70%',
+      left: '50%',
+    },
+  ];
 
   useEffect(() => {
     if (user) {
@@ -78,35 +116,38 @@ const Menu = () => {
     if (menuItems.length > 0 && preferences) {
       // Filter menu items based on preferences
       const filtered = menuItems.filter((item) => {
+        // Assume each item has a 'tags' array that includes dietary info
         for (let restriction in preferences.dietaryRestrictions) {
           if (
             preferences.dietaryRestrictions[restriction] &&
             item.tags.includes(restriction)
           ) {
-            return false;
+            return false; // Exclude this item
           }
         }
-        return true;
+        return true; // Include this item
       });
       setFilteredItems(filtered);
     }
   }, [menuItems, preferences]);
 
   const fetchMenuItems = () => {
+    // Use menuData from useMenuData hook or fetch from other sources if necessary
     setMenuItems(menuData);
   };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl mb-4">Menu</h1>
-      {/* Search Bar and Restrictions */}
+      {/* Search Bar, Dining Hall Name, and Restrictions */}
       <div className="flex items-center justify-between mb-4">
+
         <input
-          type="text"
-          placeholder="Search for food..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-          className="input input-bordered bg-white text-black flex-grow"
+            type="text"
+            placeholder="Search for food..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="input input-bordered bg-white text-black flex-grow"
         />
         <RestrictionHeader />
       </div>
@@ -124,6 +165,7 @@ const Menu = () => {
 
       {searchQuery === '' && !selectedDiningHall ? (
         width >= 1000 ? (
+          // Show the background image and buttons (Map)
           <div
             className="relative w-full max-w-full z-10"
             style={{ maxHeight: '80vh', overflow: 'hidden' }}
@@ -134,6 +176,7 @@ const Menu = () => {
               className="w-full h-auto"
               style={{ maxHeight: '80vh', objectFit: 'contain' }}
             />
+            {/* Overlay buttons */}
             {diningHalls.map((hall) => (
               <button
                 key={hall.name}
@@ -158,10 +201,13 @@ const Menu = () => {
             ))}
           </div>
         ) : (
+          // Show DiningHallButtons component on small screens
           <DiningHallButtons onDiningHallClick={handleDiningHallClick} />
         )
       ) : (
+        // Show the menu items
         <div className="p-6">
+          {/* Navbar Component */}
           <Navbar
             setAll={setAll}
             setBreakfast={setBreakfast}
@@ -171,6 +217,7 @@ const Menu = () => {
             selectedDiningHall={selectedDiningHall}
             searchQuery={searchQuery}
           />
+          {/* MenuItems Component */}
           <MenuItems
             items={menuData}
             all={all}
@@ -181,11 +228,13 @@ const Menu = () => {
             searchQuery={searchQuery}
             selectedDiningHall={selectedDiningHall}
           />
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredItems.map((item) => (
               <div key={item.id} className="border p-4 rounded">
                 <h2 className="text-xl mb-2">{item.name}</h2>
                 <p>{item.description}</p>
+                {/* Display other item details */}
               </div>
             ))}
           </div>
