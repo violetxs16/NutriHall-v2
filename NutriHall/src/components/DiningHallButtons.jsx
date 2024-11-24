@@ -2,12 +2,12 @@ import React from 'react';
 
 const DiningHallButtons = ({ onDiningHallClick }) => {
   const diningHalls = [
-    'Cowell-Stevenson Dining Hall',
-    'Crown-Merrill Dining Hall',
-    'College Nine/John R Lewis Dining Hall',
-    'Rachel Carson/Oakes Dining Hall',
-    'Porter/Kresge Dining Hall',
-    'Cafe',
+    "John R. Lewis & College Nine",
+    "Cowell & Stevenson",
+    "Crown & Merrill",
+    "Porter & Kresge",
+    "Rachel Carson & Oakes",
+    "Cafe",
   ];
 
   return (

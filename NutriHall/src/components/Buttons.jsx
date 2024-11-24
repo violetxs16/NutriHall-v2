@@ -54,7 +54,7 @@ const Buttons = ({
 
           &.active {
             font-weight: bold;
-            background-color: #eee;
+            background-color: #64748b;
           }
 
           span {

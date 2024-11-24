@@ -1,3 +1,4 @@
+//src/MenuAll.jsx
 import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useState } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
@@ -204,7 +205,7 @@ const MenuAll = ({
               {/* Record Meal Button */}
               <button
                 onClick={() => handleRecordMeal(item)}
-                className="mt-2 px-2 py-2 bg-green-200 text-#1F2937 rounded w-40"
+                className="mt-2 px-2 py-2 bg-green-600 text-#64748b rounded w-40"
               >
                 Record Meal
               </button>
