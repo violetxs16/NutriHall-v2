@@ -1,3 +1,4 @@
+//src/components/RestrictionHeader.jsx
 import React, { useContext } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 

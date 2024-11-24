@@ -1,7 +1,17 @@
-/**@jsxRuntime classic*/
-/**@jsx jsx */
+/** @jsxRuntime classic */
+/** @jsx jsx */
 import { css, jsx } from "@emotion/react";
-const Buttons = ({ setAll, setBreakfast, setLunch, setShakes }) => { 
+
+const Buttons = ({
+  setAll,
+  setBreakfast,
+  setLunch,
+  setDinner,
+  all,
+  breakfast,
+  lunch,
+  dinner,
+}) => {
   const breakpoints = [576, 768, 992, 1200];
 
   const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
@@ -19,6 +29,7 @@ const Buttons = ({ setAll, setBreakfast, setLunch, setShakes }) => {
           cursor: pointer;
           transition: 0.3s linear;
           outline: none;
+          background-color: transparent;
 
           ${mq[2]} {
             margin: 0 1rem;
@@ -41,12 +52,18 @@ const Buttons = ({ setAll, setBreakfast, setLunch, setShakes }) => {
             width: 100%;
           }
 
+          &.active {
+            font-weight: bold;
+            background-color: #eee;
+          }
+
           span {
             padding: 0 5px;
             font-family: "Poppins", sans-serif;
             font-weight: 600;
             font-size: 1rem;
             margin: auto;
+
             ${mq[2]} {
               padding: 0;
             }
@@ -58,44 +75,48 @@ const Buttons = ({ setAll, setBreakfast, setLunch, setShakes }) => {
       `}
     >
       <button
+        className={all ? "active" : ""}
         onClick={() => {
           setAll(true);
           setBreakfast(false);
           setLunch(false);
-          setShakes(false);
+          setDinner(false);
         }}
       >
         <span>All</span>
       </button>
 
       <button
+        className={breakfast ? "active" : ""}
         onClick={() => {
-          setBreakfast(true);
           setAll(false);
+          setBreakfast(true);
           setLunch(false);
-          setShakes(false);
+          setDinner(false);
         }}
       >
         <span>Breakfast</span>
       </button>
 
       <button
+        className={lunch ? "active" : ""}
         onClick={() => {
-          setLunch(true);
           setAll(false);
           setBreakfast(false);
-          setShakes(false);
+          setLunch(true);
+          setDinner(false);
         }}
       >
         <span>Lunch</span>
       </button>
 
       <button
+        className={dinner ? "active" : ""}
         onClick={() => {
-          setShakes(true);
           setAll(false);
           setBreakfast(false);
           setLunch(false);
+          setDinner(true);
         }}
       >
         <span>Dinner</span>

@@ -5,7 +5,6 @@ import { ref, onValue } from 'firebase/database';
 import Navbar from '../components/Navbar';
 import MenuItems from '../components/MenuItems';
 import useMenuData from '../components/MenuData';
-import MenuAll from '../components/MenuAll';
 import backgroundImage from '../assets/ucsc_map.jpg';
 import RestrictionHeader from '../components/RestrictionHeader';
 import { PreferencesContext } from '../contexts/PreferencesContext';
@@ -24,27 +23,38 @@ const useWindowWidth = () => {
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
-  const [filteredItems, setFilteredItems] = useState([]);
   const [preferences, setPreferences] = useState(null);
   const [all, setAll] = useState(true);
-  const [breakfast, setBreakfast] = useState(true);
-  const [lunch, setLunch] = useState(true);
-  const [dinner, setDinner] = useState(true);
-  const [shakes, setShakes] = useState(false);
+  const [breakfast, setBreakfast] = useState(false);
+  const [lunch, setLunch] = useState(false);
+  const [dinner, setDinner] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiningHall, setSelectedDiningHall] = useState(null);
 
   const user = auth.currentUser;
 
+  const { temporaryPreferences } = useContext(PreferencesContext);
+
   // Destructure menuData and error from useMenuData hook
   const { menuData, error } = useMenuData();
 
+  
   const width = useWindowWidth();
 
   useEffect(() => {
-    // Fetch full menu items from your data source
-    fetchMenuItems();
-  }, []);
+    console.log('Menu Data from useMenuData:', menuData);
+  }, [menuData]);
+
+  useEffect(() => {
+    console.log('Menu Items in Menu.jsx:', menuItems);
+  }, [menuItems]);
+
+  useEffect(() => {
+    if (menuData) {
+      setMenuItems(menuData);
+    }
+  }, [menuData]);
+
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
@@ -65,37 +75,32 @@ const Menu = () => {
     return <div>Error loading menu: {error}</div>;
   }
 
-  // Define dining halls with positions
+  // Define dining halls with positions (use numbers without quotes)
   const diningHalls = [
     {
-      name: 'Cowell-Stevenson Dining Hall',
-      top: '48%',
-      left: '80%',
+      name: 'Cowell & Stevenson',
+      top: 61,
+      left: 88,
     },
     {
-      name: 'Crown-Merrill Dining Hall',
-      top: '32%',
-      left: '72%',
+      name: 'Crown & Merrill',
+      top: 14,
+      left: 88,
     },
     {
-      name: 'College Nine/John R Lewis Dining Hall',
-      top: '20%',
-      left: '65%',
+      name: 'John R. Lewis & College Nine',
+      top: 16,
+      left: 62,
     },
     {
-      name: 'Rachel Carson/Oakes Dining Hall',
-      top: '60%',
-      left: '45%',
+      name: 'Rachel Carson & Oakes',
+      top: 71,
+      left: 42,
     },
     {
-      name: 'Porter/Kresge Dining Hall',
-      top: '58%',
-      left: '35%',
-    },
-    {
-      name: 'Cafe', // Assuming 'Cafe' is the last one
-      top: '70%',
-      left: '50%',
+      name: 'Porter & Kresge',
+      top: 47,
+      left: 10,
     },
   ];
 
@@ -112,42 +117,19 @@ const Menu = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (menuItems.length > 0 && preferences) {
-      // Filter menu items based on preferences
-      const filtered = menuItems.filter((item) => {
-        // Assume each item has a 'tags' array that includes dietary info
-        for (let restriction in preferences.dietaryRestrictions) {
-          if (
-            preferences.dietaryRestrictions[restriction] &&
-            item.tags.includes(restriction)
-          ) {
-            return false; // Exclude this item
-          }
-        }
-        return true; // Include this item
-      });
-      setFilteredItems(filtered);
-    }
-  }, [menuItems, preferences]);
 
-  const fetchMenuItems = () => {
-    // Use menuData from useMenuData hook or fetch from other sources if necessary
-    setMenuItems(menuData);
-  };
 
   return (
     <div className="p-6">
       <h1 className="text-2xl mb-4">Menu</h1>
-      {/* Search Bar, Dining Hall Name, and Restrictions */}
+      {/* Search Bar and Restrictions */}
       <div className="flex items-center justify-between mb-4">
-
         <input
-            type="text"
-            placeholder="Search for food..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="input input-bordered bg-white text-black flex-grow"
+          type="text"
+          placeholder="Search for food..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className="input input-bordered bg-white text-black flex-grow"
         />
         <RestrictionHeader />
       </div>
@@ -166,39 +148,37 @@ const Menu = () => {
       {searchQuery === '' && !selectedDiningHall ? (
         width >= 1000 ? (
           // Show the background image and buttons (Map)
-          <div
-            className="relative w-full max-w-full z-10"
-            style={{ maxHeight: '80vh', overflow: 'hidden' }}
-          >
-            <img
-              src={backgroundImage}
-              alt="UCSC Map"
-              className="w-full h-auto"
-              style={{ maxHeight: '80vh', objectFit: 'contain' }}
-            />
-            {/* Overlay buttons */}
-            {diningHalls.map((hall) => (
-              <button
-                key={hall.name}
-                onClick={() => handleDiningHallClick(hall.name)}
-                className="invisible-button"
-                style={{
-                  top: hall.top,
-                  left: hall.left,
-                  width: '5%',
-                  height: '0',
-                  paddingBottom: '5%',
-                  position: 'absolute',
-                  borderRadius: '50%',
-                  border: '2px solid red',
-                  backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                  opacity: 1,
-                  cursor: 'pointer',
-                  transform: 'translate(-50%, -50%)',
-                }}
-                aria-label={`Select ${hall.name} Dining Hall`}
+          <div className="flex justify-center">
+            <div
+              className="map-container relative"
+              style={{ width: '80%', maxWidth: '1000px', position: 'relative' }}
+            >
+              <img
+                src={backgroundImage}
+                alt="UCSC Map"
+                className="w-full h-auto block"
               />
-            ))}
+              {/* Overlay buttons */}
+              {diningHalls.map((hall) => (
+                <button
+                  key={hall.name}
+                  onClick={() => handleDiningHallClick(hall.name)}
+                  className="absolute btn btn-primary btn-circle opacity-0 hover:opacity-20 transition duration-200 ease-in-out transform hover:scale-110"
+                  style={{
+                    top: `${hall.top}%`,
+                    left: `${hall.left}%`,
+                    width: '8rem',
+                    height: '8rem',
+                    borderRadius: '50%',
+
+
+                    cursor: 'pointer',
+                    transform: 'translate(-50%, -50%)',
+                  }}
+                  aria-label={`Select ${hall.name} Dining Hall`}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           // Show DiningHallButtons component on small screens
@@ -213,31 +193,22 @@ const Menu = () => {
             setBreakfast={setBreakfast}
             setLunch={setLunch}
             setDinner={setDinner}
-            setShakes={setShakes}
             selectedDiningHall={selectedDiningHall}
-            searchQuery={searchQuery}
-          />
-          {/* MenuItems Component */}
-          <MenuItems
-            items={menuData}
             all={all}
             breakfast={breakfast}
             lunch={lunch}
             dinner={dinner}
-            shakes={shakes}
+          />
+          {/* MenuItems Component */}
+          <MenuItems
+            items={menuItems}
             searchQuery={searchQuery}
             selectedDiningHall={selectedDiningHall}
+            all={all}
+            breakfast={breakfast}
+            lunch={lunch}
+            dinner={dinner}
           />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item) => (
-              <div key={item.id} className="border p-4 rounded">
-                <h2 className="text-xl mb-2">{item.name}</h2>
-                <p>{item.description}</p>
-                {/* Display other item details */}
-              </div>
-            ))}
-          </div>
         </div>
       )}
     </div>

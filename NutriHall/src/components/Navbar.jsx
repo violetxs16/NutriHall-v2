@@ -8,65 +8,83 @@ const Navbar = ({
   setBreakfast,
   setLunch,
   setDinner,
-  setShakes,
   selectedDiningHall,
-  searchQuery,
+  all,
+  breakfast,
+  lunch,
+  dinner,
 }) => {
   const breakpoints = [576, 768, 992, 1200];
 
   const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
   // Determine the display name
-  const displayName = selectedDiningHall || (searchQuery ? `Search: ${searchQuery}` : 'Menu');
+  const displayName = selectedDiningHall || 'All Dining Halls';
+
+  // Get selected meal times
+  const getSelectedMealTimes = () => {
+    if (all) {
+      return 'All Meals';
+    } else {
+      const selectedMeals = [];
+      if (breakfast) selectedMeals.push('breakfast');
+      if (lunch) selectedMeals.push('lunch');
+      if (dinner) selectedMeals.push('dinner');
+      return selectedMeals.join(', ') || 'No Meal Selected';
+    }
+  };
+
+  const mealTimes = getSelectedMealTimes();
 
   return (
     <div
       className="Navbar"
       css={css`
         display: flex;
-        justify-content: space-around;
+        flex-direction: column;
         align-items: center;
 
         .logo {
-          font-size: 1.2rem; /* Default smaller size */
+          font-size: 1.2rem;
           font-weight: bold;
         }
 
-        ${mq[2]} {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          place-items: center;
+        .meal-times {
+          font-size: 1rem;
+          font-weight: normal;
+          margin-top: 0.5rem;
+        }
 
-          .Buttons {
-            grid-row: 2;
-            grid-column: 1/4;
-          }
+        ${mq[2]} {
+          display: flex;
+          flex-direction: column;
+
+
 
           .logo {
-            grid-row: 1;
-            grid-column: 1/4;
-            position: relative;
-            bottom: 10px;
-            font-size: 2rem; /* Larger size for medium screens */
+            font-size: 2rem;
+          }
+
+          .meal-times {
+            font-size: 1rem;
           }
 
           .dwu {
-            grid-row: 1;
-            grid-column: 1/4;
-            position: relative;
-            top: 20px;
-            font-weight: 400;
-            font-size: 1rem; /* Reduced font size for tagline */
+            font-size: 1rem;
           }
         }
 
         ${mq[0]} {
           .logo {
-            font-size: 1rem; /* Even smaller for small screens */
+            font-size: 1rem;
+          }
+
+          .meal-times {
+            font-size: 0.8rem;
           }
 
           .dwu {
-            font-size: 0.8rem; /* Adjust tagline size for small screens */
+            font-size: 0.8rem;
           }
         }
       `}
@@ -78,7 +96,10 @@ const Navbar = ({
         setBreakfast={setBreakfast}
         setLunch={setLunch}
         setDinner={setDinner}
-        setShakes={setShakes}
+        all={all}
+        breakfast={breakfast}
+        lunch={lunch}
+        dinner={dinner}
       />
       <h3 className="dwu">dine with us.</h3>
     </div>

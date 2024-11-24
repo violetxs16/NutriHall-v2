@@ -203,8 +203,8 @@ const History = () => {
             <div key={entry.id} className="border p-4 mb-4 rounded">
               <h3 className="text-lg">{entry.title}</h3>
               <p>{entry.desc}</p>
-              <p>Calories: {entry.calories || 'N/A'}</p>
-              <p>Protein: {entry.protein || 'N/A'}g</p>
+              <p>Calories: {entry.nutrition.calories || 'N/A'}</p>
+              <p>Protein: {entry.nutrition.protein || 'N/A'}</p>
               <p>
                 Recorded At: {new Date(entry.recordedAt).toLocaleString()}
               </p>
