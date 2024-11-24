@@ -39,6 +39,15 @@ const restrictionImages = {
   veggie: veggieImg,
 };
 
+const diningHallShorthand = {
+  'Rachel Carson & Oakes': 'RCC',
+  'John R. Lewis & College Nine': 'JRL',
+  'Porter & Kresge': 'Porter',
+  'Crown & Merrill': 'Crown',
+  'Cowell & Stevenson': 'Stevenson',
+  'Global Village Cafe': 'Cafe',
+};
+
 // Utility function to convert fields to arrays
 function toArray(field) {
   if (Array.isArray(field)) {
@@ -59,6 +68,7 @@ const MenuAll = ({
   breakfast = false,
   lunch = false,
   dinner = false,
+  onDiningHallClick,
 }) => {
   const [filteredItems, setFilteredItems] = useState([]);
   const user = auth.currentUser;
@@ -151,14 +161,21 @@ const MenuAll = ({
       alert('Please log in to record meals.');
       return;
     }
-
+  
     const diaryRef = ref(database, `users/${user.uid}/diary`);
+    const historyRef = ref(database, `users/${user.uid}/history`);
     const newEntry = {
       ...item,
       recordedAt: new Date().toISOString(),
     };
-
-    push(diaryRef, newEntry)
+  
+    // Push to both diary and history
+    const promises = [
+      push(diaryRef, newEntry),
+      push(historyRef, newEntry),
+    ];
+  
+    Promise.all(promises)
       .then(() => {
         alert('Meal recorded successfully!');
       })
@@ -170,29 +187,44 @@ const MenuAll = ({
   return (
     <>
       {filteredItems.length > 0 ? (
-        filteredItems.map((item) => (
-          <div className="menu-items" key={`${item.name}-${item.diningHalls[0]}`}>
-            <div className="item-content">
-              <div className="item-title-box">
-                <h5 className="item-title">{item.name}</h5>
-                <div className="item-image-restrictions">
-                  {item.restrictions &&
-                    toArray(item.restrictions).map((restriction) =>
-                      restrictionImages[restriction] ? (
-                        <img
-                          key={restriction}
-                          src={restrictionImages[restriction]}
-                          alt={restriction}
-                          style={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            marginRight: '5px',
-                            objectFit: 'cover',
-                          }}
-                        />
-                      ) : null
-                    )}
+        filteredItems.map((item) => {
+          const itemDiningHalls = toArray(item.diningHalls);
+          return (
+            <div className="menu-items" key={`${item.name}-${itemDiningHalls[0]}`}>
+              <div className="item-content">
+                <div className="item-title-box">
+                  <h5 className="item-title">{item.name}</h5>
+                  <div className="item-image-restrictions">
+                    {item.restrictions &&
+                      toArray(item.restrictions).map((restriction) =>
+                        restrictionImages[restriction] ? (
+                          <img
+                            key={restriction}
+                            src={restrictionImages[restriction]}
+                            alt={restriction}
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              borderRadius: '50%',
+                              marginRight: '5px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        ) : null
+                      )}
+                    </div>
+                </div>
+                {/* Display Dining Halls */}
+                <div className="item-dining-halls">
+                  {itemDiningHalls.map((dh) => (
+                    <button
+                      key={dh}
+                      onClick={() => onDiningHallClick(dh)}
+                      className="text-blue-500 hover:underline mr-2"
+                    >
+                      {diningHallShorthand[dh] || dh}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="item-restrictions">
@@ -210,8 +242,8 @@ const MenuAll = ({
                 Record Meal
               </button>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         <p>No items match your criteria.</p>
       )}

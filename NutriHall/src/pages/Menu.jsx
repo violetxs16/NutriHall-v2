@@ -208,6 +208,7 @@ const Menu = () => {
             breakfast={breakfast}
             lunch={lunch}
             dinner={dinner}
+            onDiningHallClick={handleDiningHallClick}
           />
         </div>
       )}

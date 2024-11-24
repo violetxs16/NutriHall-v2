@@ -58,12 +58,12 @@ const Header = () => {
           <div className="dropdown">
             <button
               tabIndex={0}
-              className="btn btn-ghost btn-circle"
+              className="btn btn-ghost btn-circle lg:w-14 lg:h-14 "
               onClick={handleMenuDropdownToggle}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="lg:h-8 lg:w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -88,55 +88,55 @@ const Header = () => {
             {showMenuDropdown && (
               <ul
                 tabIndex={0}
-                className="menu dropdown-content mt-3 p-2 shadow bg-secondary text-secondary-content rounded-box w-52 z-50"
+                className="menu dropdown-content mt-3 p-4 shadow bg-secondary text-secondary-content rounded-box lg:w-64 z-50"
               >
                 <li>
                   <NavLink
                     to="/food-diary"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={diaryImg} className="w-6 h-6" alt="Diary" />
+                    <img src={diaryImg} className="lg:w-8 lg:h-8" alt="Diary" />
                     <span>Food Diary</span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/record-meal"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={mealImg} className="w-6 h-6" alt="Meal" />
+                    <img src={mealImg} className="lg:w-8 lg:h-8" alt="Meal" />
                     <span>AI Meal Generation</span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/menu"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-4 lg:text-lg "
                     onClick={handleLinkClick}
                   >
-                    <img src={menuImg} className="w-6 h-6" alt="Menu" />
+                    <img src={menuImg} className="lg:w-8 lg:h-8" alt="Menu" />
                     <span>Menu</span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/history"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={historyImg} className="w-6 h-6" alt="History" />
+                    <img src={historyImg} className="lg:w-8 lg:h-8" alt="History" />
                     <span>History</span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/settings"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={settingsImg} className="w-6 h-6" alt="Settings" />
+                    <img src={settingsImg} className="lg:w-8 lg:h-8" alt="Settings" />
                     <span>Settings</span>
                   </NavLink>
                 </li>
@@ -147,7 +147,11 @@ const Header = () => {
 
         {/* Center Logo */}
         <div className="navbar-center">
-          <NavLink to="/menu" className="btn btn-ghost normal-case text-xl" onClick={handleLinkClick}>
+          <NavLink
+            to="/menu"
+            className="btn btn-ghost normal-case text-3xl"
+            onClick={handleLinkClick}
+          >
             NutriHall
           </NavLink>
         </div>
@@ -157,25 +161,34 @@ const Header = () => {
           <div className="dropdown dropdown-end">
             <button
               tabIndex={0}
-              className="btn btn-ghost btn-circle avatar"
+              className="btn btn-ghost btn-circle avatar lg:w-14 lg:h-14"
               onClick={handleProfileDropdownToggle}
             >
-              <div className="w-10 rounded-full">
+              <div className="lg:w-12 lg:h-12 rounded-full">
                 <img alt="User" src={userImg} />
               </div>
             </button>
             {showProfileDropdown && (
               <ul
                 tabIndex={0}
-                className="menu dropdown-content mt-3 p-2 shadow bg-secondary text-secondary-content rounded-box w-52 z-50"
+                className="menu dropdown-content mt-3 p-4 shadow bg-secondary text-secondary-content rounded-box lg:w-64 z-50"
               >
                 <li>
-                  <NavLink to="/settings" onClick={handleLinkClick}>
+                  <NavLink
+                    to="/settings"
+                    className="lg:text-lg"
+                    onClick={handleLinkClick}
+                  >
                     Profile
                   </NavLink>
                 </li>
                 <li>
-                  <button onClick={handleLogout}>Logout</button>
+                  <button
+                    className="lg:text-lg"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
                 </li>
               </ul>
             )}

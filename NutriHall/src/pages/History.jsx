@@ -65,7 +65,7 @@ const History = () => {
 
         historyList.forEach((entry) => {
           const date = entry.recordedAt.split('T')[0]; // Get date in YYYY-MM-DD format
-          const calories = parseInt(entry.calories) || 0;
+          const calories = parseInt(entry.nutrition.calories) || 0;
 
           if (calorieDataMap[date]) {
             calorieDataMap[date] += calories;
@@ -108,8 +108,8 @@ const History = () => {
   // Calculate total calories and protein consumed today
   const today = new Date().toISOString().split('T')[0];
   const todayMeals = mealHistory.filter((entry) => entry.recordedAt.startsWith(today));
-  const totalCaloriesConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.calories) || 0), 0);
-  const totalProteinConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.protein) || 0), 0);
+  const totalCaloriesConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.nutrition.calories) || 0), 0);
+  const totalProteinConsumed = todayMeals.reduce((sum, entry) => sum + (parseInt(entry.nutrition.protein) || 0), 0);
 
   // User's protein goal (you may need to fetch this from preferences or accountInfo)
   const proteinGoal = 150; // Example value

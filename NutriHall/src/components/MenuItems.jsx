@@ -10,6 +10,7 @@ const MenuItems = ({
   breakfast,
   lunch,
   dinner,
+  onDiningHallClick,
 }) => {
   return (
     <div className="menu-items-container">
@@ -21,6 +22,7 @@ const MenuItems = ({
         breakfast={breakfast}
         lunch={lunch}
         dinner={dinner}
+        onDiningHallClick={onDiningHallClick}
       />
     </div>
   );
