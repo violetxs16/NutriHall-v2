@@ -196,7 +196,13 @@ const MenuAll = ({
               <div className="item-content">
                 <div className="item-title-box">
                   <h5 className="item-title">{item.name}</h5>
-                  <div className="item-image-restrictions">
+                  <div className="item-image-restrictions"
+                    style={{
+                      display: 'flex', // Makes children align horizontally
+                      alignItems: 'center', // Vertically centers the images
+                      gap: '5px', // Adds spacing between images (optional)
+                    }}
+                  >
                     {item.restrictions &&
                       toArray(item.restrictions).map((restriction) =>
                         restrictionImages[restriction] ? (
