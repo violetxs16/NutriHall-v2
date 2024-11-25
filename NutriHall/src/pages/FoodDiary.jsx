@@ -37,7 +37,7 @@ function FoodDiary() {
 
                 // Sort entries in reverse chronological order
                 diaryList.sort((a, b) => new Date(b.recordedAt) - new Date(a.recordedAt));
-
+                console.log('diaryList:', diaryList);
                 setMealDiary(diaryList);
 
                 // Process data for the chart

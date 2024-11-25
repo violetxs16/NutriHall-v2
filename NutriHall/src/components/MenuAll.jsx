@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import React, { useContext, useEffect, useState } from 'react';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 import { auth, database } from '../firebaseConfig';
-import { ref, push } from 'firebase/database';
+import { ref, push, set } from 'firebase/database';
 import veganImg from '../assets/vegan.gif';
 import alcoholImg from '../assets/alcohol.gif';
 import beefImg from '../assets/beef.gif';
@@ -162,17 +162,17 @@ const MenuAll = ({
       return;
     }
   
-    const diaryRef = ref(database, `users/${user.uid}/diary`);
-    const historyRef = ref(database, `users/${user.uid}/history`);
+    const diaryRef = ref(database, `users/${user.uid}/diary/${sanitizeKey(item.name)}_${Date.now()}`);
+    const historyRef = ref(database, `users/${user.uid}/history/${sanitizeKey(item.name)}_${Date.now()}`);
     const newEntry = {
       ...item,
       recordedAt: new Date().toISOString(),
     };
   
-    // Push to both diary and history
+    // Set to both diary and history
     const promises = [
-      push(diaryRef, newEntry),
-      push(historyRef, newEntry),
+      set(diaryRef, newEntry),
+      set(historyRef, newEntry),
     ];
   
     Promise.all(promises)
@@ -183,6 +183,8 @@ const MenuAll = ({
         console.error('Error recording meal:', error);
       });
   };
+  // Utility function to sanitize the meal name for use as a Firebase key
+  const sanitizeKey = (key) => key.replace(/[^a-zA-Z0-9_-]/g, '_');
 
   return (
     <>
