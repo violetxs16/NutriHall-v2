@@ -4,8 +4,7 @@ import {auth, database} from '../firebaseConfig';
 import '../styles/FoodDiary.css';
 import crossImg from '../assets/cross.gif';
 
-function TodaysDate() {
-    const date = new Date();
+function formatDate(date) {
     let weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
     let current_day = weekday[date.getDay()];
     let months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
@@ -20,7 +19,8 @@ function FoodDiary() {
 
     const [mealDiary, setMealDiary] = useState([]);
     const [calorieData, setCalorieData] = useState([]);
-  const [calorieGoal, setCalorieGoal] = useState(2000);
+    const [calorieGoal, setCalorieGoal] = useState(2000);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const user = auth.currentUser;
 
     useEffect(() => {
@@ -70,6 +70,26 @@ function FoodDiary() {
         });
     }, [user]);
 
+    const handlePreviousDay = () => {
+        setSelectedDate((prevDate) => {
+            const newDate = new Date(prevDate);
+            newDate.setDate(prevDate.getDate() - 1);
+            return newDate;
+        });
+    };
+
+    const handleNextDay = () => {
+        setSelectedDate((prevDate) => {
+            const newDate = new Date(prevDate);
+            newDate.setDate(prevDate.getDate() + 1);
+            return newDate;
+        });
+    };
+
+    const filteredDiary = mealDiary.filter(
+        (entry) => entry.recordedAt.split('T')[0]  === selectedDate.toISOString().split('T')[0]
+    )
+
     const deleteRow = (id) => {
         const diaryRef = ref(database, `users/${user.uid}/diary`);
         onValue(diaryRef, (snapshot) => {
@@ -90,9 +110,9 @@ return (
     <div className="food-diary">
             <h2>Your Food Diary For:</h2>
             <div className="date-nav">
-                <button>&lt;</button>
-                <span><TodaysDate/></span>
-                <button>&gt;</button>
+                <button onClick={handlePreviousDay}>&lt;</button>
+                <span>{formatDate(selectedDate)}</span>
+                <button onClick={handleNextDay}>&gt;</button>
             </div>
             <section>
                 <table className="food-table">
@@ -107,7 +127,7 @@ return (
                         </tr>
                     </thead>
                     <tbody>
-                        {mealDiary.map((entry) => (
+                        {filteredDiary.map((entry) => (
                             <tr key={entry.id}>
                                 <td data-label="Item">{entry.name}</td>
                                 <td data-label="Calories">{entry.nutrition.calories || 'N/A'}</td>
@@ -124,6 +144,9 @@ return (
                         ))}
                     </tbody>
                 </table>
+                {filteredDiary.length === 0 && (
+                    <p>Navigate to the menu to record meals!</p>
+                )}
             </section>
     </div>
 );
