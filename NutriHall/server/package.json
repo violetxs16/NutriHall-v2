@@ -11,6 +11,6 @@
   "description": "",
   "dependencies": {
     "firebase": "^10.14.1",
-    "puppeteer": "^23.7.1"
+    "puppeteer": "^23.8.0"
   }
 }
