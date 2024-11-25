@@ -196,9 +196,6 @@ const MenuAll = ({
               <div className="item-content">
                 <div className="item-title-box">
                   <h5 className="item-title">{item.name}</h5>
-                  <div className="item-nutrition-info">
-
-                  </div>
                   <div className="item-image-restrictions"
                     style={{
                       display: 'flex', // Makes children align horizontally
@@ -246,7 +243,7 @@ const MenuAll = ({
                 )}
               </div>
               <div className="item-nutrition info">
-                {item.nuntrition && toArray(item.nutrition).length > 0 ? (
+                {item.nuntrition ? (
                     <div>
                       {item.nutrition.calories && <p>Calories: {item.nutrition.calories}</p>}
                       {item.nutrition.protein && <p>Protein: {item.nutrition.protein}g</p>}
