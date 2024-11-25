@@ -243,7 +243,7 @@ const MenuAll = ({
                 )}
               </div>
               <div className="item-nutrition info">
-                {item.nuntrition ? (
+                {item.nutrition ? (
                     <div>
                       {item.nutrition.calories && <p>Calories: {item.nutrition.calories}</p>}
                       {item.nutrition.protein && <p>Protein: {item.nutrition.protein}g</p>}
