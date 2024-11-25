@@ -108,7 +108,7 @@ return (
                     <tbody>
                         {mealDiary.map((entry) => (
                             <tr key={entry.id}>
-                                <td data-label="Item">{entry.name}</td>
+                                <td data-label="Item">{entry.id}</td>
                                 <td data-label="Calories">{entry.nutrition.calories || 'N/A'}</td>
                                 <td data-label="Carbs">{entry.nutrition.totalCarb || 'N/A'}</td>
                                 <td data-label="Fat">{entry.nutrition.totalFat || 'N/A'}</td>
