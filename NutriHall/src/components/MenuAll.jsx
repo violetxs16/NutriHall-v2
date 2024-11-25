@@ -196,6 +196,9 @@ const MenuAll = ({
               <div className="item-content">
                 <div className="item-title-box">
                   <h5 className="item-title">{item.name}</h5>
+                  <div className="item-nutrition-info">
+
+                  </div>
                   <div className="item-image-restrictions"
                     style={{
                       display: 'flex', // Makes children align horizontally
@@ -240,6 +243,18 @@ const MenuAll = ({
                   <p>Restrictions: {toArray(item.restrictions).join(', ')}</p>
                 ) : (
                   <p>No restrictions</p>
+                )}
+              </div>
+              <div className="item-nutrition info">
+                {item.nuntrition && toArray(item.nutrition).length > 0 ? (
+                    <div>
+                      {item.nutrition.calories && <p>Calories: {item.nutrition.calories}</p>}
+                      {item.nutrition.protein && <p>Protein: {item.nutrition.protein}g</p>}
+                      {item.nutrition.totalCarb && <p>Carbs: {item.nutrition.totalCarb}g</p>}
+                      {item.nutrition.totalFat && <p>Fat: {item.nutrition.totalFat}g</p>}
+                    </div>
+                  ) : (
+                  <p>No Nutrition Information</p>
                 )}
               </div>
               {/* Record Meal Button */}
