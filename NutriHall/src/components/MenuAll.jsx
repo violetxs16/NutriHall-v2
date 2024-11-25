@@ -246,9 +246,9 @@ const MenuAll = ({
                 {item.nutrition ? (
                     <div>
                       {item.nutrition.calories && <p>Calories: {item.nutrition.calories}</p>}
-                      {item.nutrition.protein && <p>Protein: {item.nutrition.protein}g</p>}
-                      {item.nutrition.totalCarb && <p>Carbs: {item.nutrition.totalCarb}g</p>}
-                      {item.nutrition.totalFat && <p>Fat: {item.nutrition.totalFat}g</p>}
+                      {item.nutrition.protein && <p>Protein: {item.nutrition.protein}</p>}
+                      {item.nutrition.totalCarb && <p>Carbs: {item.nutrition.totalCarb}</p>}
+                      {item.nutrition.totalFat && <p>Fat: {item.nutrition.totalFat}</p>}
                     </div>
                   ) : (
                   <p>No Nutrition Information</p>
