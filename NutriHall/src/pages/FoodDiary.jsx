@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {ref, onValue, remove} from 'firebase/database';
 import {auth, database} from '../firebaseConfig';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'
 import '../styles/FoodDiary.css';
 import crossImg from '../assets/cross.gif';
 
@@ -112,6 +114,11 @@ return (
             <div className="date-nav">
                 <button onClick={handlePreviousDay}>&lt;</button>
                 <span>{formatDate(selectedDate)}</span>
+                <DatePicker
+                    onChange={(date) => setSelectedDate(date)}
+                    maxDate={new Date()}
+                    className='custom-datepicker'
+                />
                 <button onClick={handleNextDay}>&gt;</button>
             </div>
             <section>
