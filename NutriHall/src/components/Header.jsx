@@ -58,7 +58,7 @@ const Header = () => {
           <div className="dropdown">
             <button
               tabIndex={0}
-              className="btn btn-ghost btn-circle lg:w-14 lg:h-14 "
+              className="btn btn-ghost btn-circle lg:w-7 lg:h-7 "
               onClick={handleMenuDropdownToggle}
             >
               <svg
@@ -96,7 +96,7 @@ const Header = () => {
                     className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={diaryImg} className="lg:w-8 lg:h-8" alt="Diary" />
+                    <img src={diaryImg} className="lg:w-2 lg:h-2" alt="Diary" />
                     <span>Food Diary</span>
                   </NavLink>
                 </li>
@@ -106,7 +106,7 @@ const Header = () => {
                     className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={mealImg} className="lg:w-8 lg:h-8" alt="Meal" />
+                    <img src={mealImg} className="lg:w-2 lg:h-2" alt="Meal" />
                     <span>AI Meal Generation</span>
                   </NavLink>
                 </li>
@@ -116,7 +116,7 @@ const Header = () => {
                     className="flex items-center space-x-4 lg:text-lg "
                     onClick={handleLinkClick}
                   >
-                    <img src={menuImg} className="lg:w-8 lg:h-8" alt="Menu" />
+                    <img src={menuImg} className="lg:w-2 lg:h-2" alt="Menu" />
                     <span>Menu</span>
                   </NavLink>
                 </li>
@@ -126,7 +126,7 @@ const Header = () => {
                     className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={historyImg} className="lg:w-8 lg:h-8" alt="History" />
+                    <img src={historyImg} className="lg:w-2 lg:h-2" alt="History" />
                     <span>History</span>
                   </NavLink>
                 </li>
@@ -136,7 +136,7 @@ const Header = () => {
                     className="flex items-center space-x-4 lg:text-lg"
                     onClick={handleLinkClick}
                   >
-                    <img src={settingsImg} className="lg:w-8 lg:h-8" alt="Settings" />
+                    <img src={settingsImg} className="lg:w-2 lg:h-2" alt="Settings" />
                     <span>Settings</span>
                   </NavLink>
                 </li>
