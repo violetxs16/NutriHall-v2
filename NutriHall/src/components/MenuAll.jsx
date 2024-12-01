@@ -183,8 +183,6 @@ const MenuAll = ({
         console.error('Error recording meal:', error);
       });
   };
-  // Utility function to sanitize the meal name for use as a Firebase key
-  const sanitizeKey = (key) => key.replace(/[^a-zA-Z0-9_-]/g, '_');
 
   return (
     <>
