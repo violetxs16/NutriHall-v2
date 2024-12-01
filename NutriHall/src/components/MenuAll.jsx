@@ -235,13 +235,7 @@ const MenuAll = ({
                   ))}
                 </div>
               </div>
-              <div className="item-restrictions">
-                {item.restrictions && toArray(item.restrictions).length > 0 ? (
-                  <p>Restrictions: {toArray(item.restrictions).join(', ')}</p>
-                ) : (
-                  <p>No restrictions</p>
-                )}
-              </div>
+              
               <div className="item-nutrition info">
                 {item.nutrition ? (
                     <div>
