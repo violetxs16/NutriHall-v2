@@ -2,6 +2,7 @@
 Dependencies: 
 front end using vite
 1) npm install vite
+2) npm install react-datepicker
 
 backend: 'server' folder includes all the files for the Back-End 
 1) npm install firebase      - install firebase
