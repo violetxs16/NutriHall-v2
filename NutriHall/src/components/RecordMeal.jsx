@@ -11,7 +11,6 @@ const RecordMeal = () => {
   const [user] = useAuthState(auth);
   const [meal, setMeal] = useState(null);
   const [preferences, setPreferences] = useState(null);
-  const [acctInfo, setAccountInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [food, setFood] = useState(null);
 
@@ -28,21 +27,6 @@ const RecordMeal = () => {
         }
       } catch (error) {
         console.error('Error fetching preferences:', error);
-      }
-    };
-
-    const fetchAccountInfo = async (uid) => {
-      try {
-        const infoRef = ref(database, `users/${uid}/accountInfo`);
-        const snapshot = await get(infoRef);
-
-        if (snapshot.exists()) {
-          setAccountInfo(snapshot.val());
-        } else {
-          console.log('No info found for this user.');
-        }
-      } catch (error) {
-        console.error('Error fetching info:', error);
       }
     };
 
@@ -115,8 +99,8 @@ const RecordMeal = () => {
   };
 
   const generateMeal = async () => {
-    if (!user || !preferences || !acctInfo) {
-      console.log('User or preferences/account info not available.');
+    if (!user || !preferences) {
+      console.log('User or preferences not available.');
       return;
     }
 
