@@ -48,7 +48,6 @@ const RecordMeal = () => {
 
     if (user) {
       fetchPreferences(user.uid);
-      fetchAccountInfo(user.uid);
       fetchFood();
     }
   }, [user]);
