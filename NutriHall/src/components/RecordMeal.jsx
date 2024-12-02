@@ -125,8 +125,6 @@ const RecordMeal = () => {
     try {
       const prompt = `
         Generate a personalized meal plan based on the following details:
-        - Height: ${acctInfo.height || 'unknown'} cm
-        - Weight: ${acctInfo.weight || 'unknown'} kg
         - Dietary restrictions: ${Object.keys(preferences.dietaryRestrictions).filter((key) => preferences.dietaryRestrictions[key]).join(', ') || 'none'}
         - Calorie range: ${preferences.calorieRange || 'any'}
         - Foods available today: ${food || 'none'}
