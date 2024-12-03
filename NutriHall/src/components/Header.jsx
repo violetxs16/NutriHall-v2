@@ -33,7 +33,7 @@ const Header = () => {
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
       auth.signOut();
-      navigate('/login');
+      navigate('/');
     }
   };
 
@@ -148,7 +148,7 @@ const Header = () => {
         {/* Center Logo */}
         <div className="navbar-center">
           <NavLink
-            to="/menu"
+            to="/"
             className="btn btn-ghost normal-case text-3xl"
             onClick={handleLinkClick}
           >
