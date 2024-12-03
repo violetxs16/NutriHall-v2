@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ref, query, orderByChild, equalTo, get, set } from 'firebase/database';
+import { ref, get, set } from 'firebase/database';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import Fuse from 'fuse.js';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 const genAI = new GoogleGenerativeAI("AIzaSyCPNNVBuaWPm7-JaqFtmFA1P_pWJi6ifHQ");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
 
 const RecordMeal = () => {
-  const [user] = useAuthState(auth);
+  const [user, loadingAuth, errorAuth] = useAuthState(auth);
   const [meal, setMeal] = useState(null);
   const [preferences, setPreferences] = useState(null);
   const [loading, setLoading] = useState(false);
   const [food, setFood] = useState(null);
   const [foodData, setFoodData] = useState({});
   const [recordedItems, setRecordedItems] = useState(new Set()); // Track recorded items
+  const [fuse, setFuse] = useState(null); // Initialize Fuse.js instance
+  const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     const fetchPreferences = async (uid) => {
@@ -23,9 +27,11 @@ const RecordMeal = () => {
         const snapshot = await get(preferencesRef);
 
         if (snapshot.exists()) {
+          console.log('Preferences fetched:', snapshot.val());
           setPreferences(snapshot.val());
         } else {
           console.log('No preferences found for this user.');
+          setPreferences(null); // Explicitly set to null
         }
       } catch (error) {
         console.error('Error fetching preferences:', error);
@@ -41,6 +47,15 @@ const RecordMeal = () => {
           const foodItems = snapshot.val();
           setFoodData(foodItems);
           setFood(Object.keys(foodItems));
+          console.log('Food data fetched:', foodItems);
+
+          // Initialize Fuse.js with foodData
+          const options = {
+            keys: ['name'], // Specify the key to search in
+            threshold: 0.3, // Adjust the threshold for matching (0.0 = exact match, 1.0 = match anything)
+          };
+          const fuseInstance = new Fuse(Object.values(foodItems), options);
+          setFuse(fuseInstance);
         } else {
           console.log('No food exists');
         }
@@ -53,11 +68,17 @@ const RecordMeal = () => {
     const savedMeal = localStorage.getItem('mealPlan');
     if (savedMeal) {
       setMeal(JSON.parse(savedMeal));
+      console.log('Loaded saved meal plan from localStorage.');
     }
 
     if (user) {
       fetchPreferences(user.uid);
       fetchFood();
+    } else {
+      setPreferences(null);
+      setFoodData({});
+      setFood(null);
+      console.log('No user is logged in.');
     }
   }, [user]);
 
@@ -65,29 +86,34 @@ const RecordMeal = () => {
 
   const handleRecordMeal = async (foodName) => {
     if (!user) {
-      alert('Please log in to record meals.');
+      // User should already be logged in to see the Record button, but just in case
       return;
     }
 
-    // Find closest matching food item in database
-    const matchingFood = Object.entries(foodData).find(([key]) => 
-      key.toLowerCase().includes(foodName.toLowerCase())
-    );
-
-    if (!matchingFood) {
-      alert(`Could not find "${foodName}" in our database`);
+    if (!fuse) {
+      // Food data is not loaded yet
       return;
     }
 
-    const [exactName, item] = matchingFood;
+    // Use Fuse.js to find the best match
+    const results = fuse.search(foodName);
+    if (results.length === 0) {
+      // No match found, ideally this shouldn't happen due to the "Search Menu" option
+      return;
+    }
+
+    // Get the best match (first result)
+    const bestMatch = results[0].item;
+    const exactName = bestMatch.name; // Assuming each food item has a 'name' property
 
     try {
       const timestamp = Date.now();
-      const diaryRef = ref(database, `users/${user.uid}/diary/${sanitizeKey(exactName)}_${timestamp}`);
-      const historyRef = ref(database, `users/${user.uid}/history/${sanitizeKey(exactName)}_${timestamp}`);
+      const sanitizedName = sanitizeKey(exactName);
+      const diaryRef = ref(database, `users/${user.uid}/diary/${sanitizedName}_${timestamp}`);
+      const historyRef = ref(database, `users/${user.uid}/history/${sanitizedName}_${timestamp}`);
       
       const newEntry = {
-        ...item,
+        ...bestMatch,
         recordedAt: new Date().toISOString(),
       };
 
@@ -97,8 +123,8 @@ const RecordMeal = () => {
       ]);
 
       // Mark item as recorded
-      setRecordedItems(prev => new Set([...prev, foodName]));
-      alert('Meal recorded successfully!');
+      setRecordedItems(prev => new Set([...prev, exactName]));
+      // Removed alert for success
     } catch (error) {
       console.error('Error recording meal:', error);
       alert('Failed to record meal');
@@ -125,7 +151,7 @@ const RecordMeal = () => {
       } else {
         if (currentMeal) {
           const foodItems = line.split(';').map(item => {
-            const match = item.trim().match(/^\s*(\D*):([^\n]*)/);
+            const match = item.trim().match(/^\s*(.+?):\s*(.+)$/);
             if (match) {
               return {
                 food: match[1].trim(),
@@ -146,19 +172,37 @@ const RecordMeal = () => {
   };
 
   const generateMeal = async () => {
+    if (loadingAuth) {
+      console.log('Authentication state is loading...');
+      return;
+    }
+
+    if (errorAuth) {
+      console.error('Authentication error:', errorAuth);
+      alert('Authentication error. Please try again.');
+      return;
+    }
+
     if (!user || !preferences) {
       console.log('User or preferences not available.');
+      alert('User or preferences not available. Please ensure you are logged in and have set your preferences.');
       return;
     }
 
     setLoading(true);
 
     try {
+      const dietaryRestrictions = preferences.dietaryRestrictions
+        ? Object.keys(preferences.dietaryRestrictions).filter(key => preferences.dietaryRestrictions[key]).join(', ')
+        : 'none';
+      const calorieRange = preferences.calorieRange || 'any';
+      const availableFoods = food || 'none';
+
       const prompt = `
         Generate a personalized meal plan based on the following details:
-        - Dietary restrictions: ${Object.keys(preferences.dietaryRestrictions).filter((key) => preferences.dietaryRestrictions[key]).join(', ') || 'none'}
-        - Calorie range: ${preferences.calorieRange || 'any'}
-        - Foods available today: ${food || 'none'}
+        - Dietary restrictions: ${dietaryRestrictions}
+        - Calorie range: ${calorieRange}
+        - Foods available today: ${availableFoods}
 
         Provide a meal plan with breakfast, lunch, and dinner.
         Return a response in the following format:
@@ -173,7 +217,9 @@ const RecordMeal = () => {
       const response = await model.generateContent(prompt);
       console.log('Response from Gemini API:', response);
 
-      const mealPlan = parseMealPlan(response.response.candidates[0].content.parts[0].text);
+      // Adjust according to actual response structure
+      const mealPlanText = response.response.candidates[0].content.parts[0].text;
+      const mealPlan = parseMealPlan(mealPlanText);
       console.log('Parsed meal plan:', mealPlan);
 
       // Save the meal plan to local storage
@@ -182,16 +228,29 @@ const RecordMeal = () => {
     } catch (error) {
       console.error('Error generating meal plan with Gemini API:', error);
       setMeal('An error occurred while generating the meal plan.');
+      alert('An error occurred while generating the meal plan.');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSearchMenu = (foodName) => {
+    // Navigate to the menu page with a search query parameter
+    // Assuming your menu route is '/menu' and it accepts a 'search' query parameter
+    navigate(`/menu?search=${encodeURIComponent(foodName)}`);
+  };
+
   const renderMealItem = (item, index) => {
     const isRecorded = recordedItems.has(item.food);
-    const foodExists = Object.keys(foodData).some(key => 
-      key.toLowerCase().includes(item.food.toLowerCase())
-    );
+    // Use exact name matching since Fuse.js handles similarity
+    const foodExists = Object.keys(foodData).includes(item.food) || recordedItems.has(item.food);
+
+    // Fuzzy search to check if the item exists
+    const results = fuse ? fuse.search(item.food) : [];
+    const bestMatch = results.length > 0 ? results[0].item.name : null;
+    const exactMatch = foodData[item.food] ? item.food : bestMatch;
+
+    const isAvailable = exactMatch && foodData[exactMatch];
 
     return (
       <li key={index} className="flex items-center justify-between mb-2 p-2 border rounded">
@@ -199,7 +258,7 @@ const RecordMeal = () => {
           <span className="font-medium">{item.food}</span>
           <span className="text-gray-600 ml-2">({item.quantity})</span>
         </div>
-        {foodExists ? (
+        {isAvailable ? (
           <button
             onClick={() => handleRecordMeal(item.food)}
             disabled={isRecorded}
@@ -212,7 +271,12 @@ const RecordMeal = () => {
             {isRecorded ? 'Recorded' : 'Record'}
           </button>
         ) : (
-          <span className="text-red-500 text-sm">Not available</span>
+          <button
+            onClick={() => handleSearchMenu(item.food)}
+            className="ml-4 px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Search Menu
+          </button>
         )}
       </li>
     );
@@ -228,6 +292,7 @@ const RecordMeal = () => {
           <button
             onClick={generateMeal}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            disabled={!user || !preferences || loadingAuth}
           >
             Generate Meal Plan
           </button>
