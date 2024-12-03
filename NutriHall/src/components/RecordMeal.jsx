@@ -46,6 +46,12 @@ const RecordMeal = () => {
       }
     };
 
+    // Check local storage for an existing meal plan
+    const savedMeal = localStorage.getItem('mealPlan');
+    if (savedMeal) {
+      setMeal(JSON.parse(savedMeal));
+    }
+
     if (user) {
       fetchPreferences(user.uid);
       fetchFood();
@@ -62,9 +68,6 @@ const RecordMeal = () => {
     const lines = mealPlanText.trim().split('\n');
     let currentMeal = null;
 
-    // Debug: Log the raw response to ensure it's being received correctly
-    console.log('Raw meal plan text:', mealPlanText);
-
     lines.forEach(line => {
       if (/^Breakfast:/.test(line)) {
         currentMeal = 'Breakfast';
@@ -73,19 +76,17 @@ const RecordMeal = () => {
       } else if (/^Dinner:/.test(line)) {
         currentMeal = 'Dinner';
       } else {
-        // Parse food items with their quantities
         if (currentMeal) {
-          const foodItems = line.split(',').map(item => {
-            // Regex to match food items and quantities, including units like "g", "cup", "tbsp"
-            const match = item.trim().match(/^(.+?)(?::\s*(\d+[\w\s]*))?$/);
+          const foodItems = line.split(';').map(item => {
+            const match = item.trim().match(/^\s*(\D*):([^\n]*)/);
             if (match) {
               return {
                 food: match[1].trim(),
-                quantity: match[2] ? match[2].trim() : '1', // Default to 1 if no quantity is provided
+                quantity: match[2].trim(),
               };
             }
             return null;
-          }).filter(Boolean); // Remove null items
+          }).filter(Boolean);
 
           if (foodItems.length > 0) {
             meals[currentMeal] = [...meals[currentMeal], ...foodItems];
@@ -115,20 +116,21 @@ const RecordMeal = () => {
         Provide a meal plan with breakfast, lunch, and dinner.
         Return a response in the following format:
         Breakfast: 
-        food1:quantity, food2:quantity
+        food1:quantity; food2:quantity
         Lunch: 
-        food1:quantity, food2:quantity
+        food1:quantity; food2:quantity
         Dinner: 
-        food1:quantity, food2:quantity
+        food1:quantity; food2:quantity
       `;
 
       const response = await model.generateContent(prompt);
       console.log('Response from Gemini API:', response);
 
-      // Parse the meal plan
       const mealPlan = parseMealPlan(response.response.candidates[0].content.parts[0].text);
       console.log('Parsed meal plan:', mealPlan);
 
+      // Save the meal plan to local storage
+      localStorage.setItem('mealPlan', JSON.stringify(mealPlan));
       setMeal(mealPlan || 'No meal plan generated.');
     } catch (error) {
       console.error('Error generating meal plan with Gemini API:', error);
