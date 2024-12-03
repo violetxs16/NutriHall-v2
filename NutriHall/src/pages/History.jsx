@@ -112,9 +112,9 @@ const History = () => {
       const nutrients = {
         calories: parseInt(entry.nutrition?.calories) || 0,
         protein: parseInt(entry.nutrition?.protein) || 0,
-        carbs: parseInt(entry.nutrition?.carbohydrates) || 0,
-        fats: parseInt(entry.nutrition?.fats) || 0,
-        fibers: parseInt(entry.nutrition?.fiber) || 0,
+        carbs: parseInt(entry.nutrition?.totalCarb) || 0,
+        fats: parseInt(entry.nutrition?.totalFat) || 0,
+        fibers: parseInt(entry.nutrition?.dietaryFiber) || 0,
       };
 
       if (!nutrientDataMap[date]) {
@@ -123,9 +123,9 @@ const History = () => {
         // Accumulate nutrients for the date
         nutrientDataMap[date].calories += nutrients.calories;
         nutrientDataMap[date].protein += nutrients.protein;
-        nutrientDataMap[date].carbs += nutrients.totalCarb;
-        nutrientDataMap[date].fats += nutrients.totalFat;
-        nutrientDataMap[date].fibers += nutrients.dietaryFiber;
+        nutrientDataMap[date].carbs += nutrients.carbs;
+        nutrientDataMap[date].fats += nutrients.fats;
+        nutrientDataMap[date].fibers += nutrients.fibers;
       }
     });
 
@@ -364,21 +364,21 @@ const History = () => {
             <Line
               type="monotone"
               dataKey="carbs"
-              stroke={nutrientColors.totalCarb}
+              stroke={nutrientColors.carbs}
               name="Carbs"
               yAxisId="right"
             />
             <Line
               type="monotone"
               dataKey="fats"
-              stroke={nutrientColors.totalFat}
+              stroke={nutrientColors.fats}
               name="Fats"
               yAxisId="right"
             />
             <Line
               type="monotone"
               dataKey="fibers"
-              stroke={nutrientColors.dietaryFiber}
+              stroke={nutrientColors.fibers}
               name="Fibers"
               yAxisId="right"
             />
