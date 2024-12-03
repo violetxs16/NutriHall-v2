@@ -123,9 +123,9 @@ const History = () => {
         // Accumulate nutrients for the date
         nutrientDataMap[date].calories += nutrients.calories;
         nutrientDataMap[date].protein += nutrients.protein;
-        nutrientDataMap[date].carbs += nutrients.carbs;
-        nutrientDataMap[date].fats += nutrients.fats;
-        nutrientDataMap[date].fibers += nutrients.fibers;
+        nutrientDataMap[date].carbs += nutrients.TotalCarb;
+        nutrientDataMap[date].fats += nutrients.TotalFat;
+        nutrientDataMap[date].fibers += nutrients.dietaryFiber;
       }
     });
 
@@ -165,15 +165,15 @@ const History = () => {
       0
     ),
     carbs: todayMeals.reduce(
-      (sum, entry) => sum + (parseInt(entry.nutrition?.carbohydrates) || 0),
+      (sum, entry) => sum + (parseInt(entry.nutrition?.TotalCarb) || 0),
       0
     ),
     fats: todayMeals.reduce(
-      (sum, entry) => sum + (parseInt(entry.nutrition?.fats) || 0),
+      (sum, entry) => sum + (parseInt(entry.nutrition?.TotalFat) || 0),
       0
     ),
     fibers: todayMeals.reduce(
-      (sum, entry) => sum + (parseInt(entry.nutrition?.fiber) || 0),
+      (sum, entry) => sum + (parseInt(entry.nutrition?.dietaryFiber) || 0),
       0
     ),
   };
@@ -263,13 +263,13 @@ const History = () => {
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border p-2 rounded w-full mr-2 bg-white"
+          className="border p-2 rounded w-full mr-2 bg-white text-black"
         />
 
         <select
           value={sortType}
           onChange={(e) => setSortType(e.target.value)}
-          className="border p-2 rounded bg-white"
+          className="border p-2 rounded bg-white text-black"
         >
           <option value="date_desc">Date (Newest First)</option>
           <option value="date_asc">Date (Oldest First)</option>
@@ -318,7 +318,7 @@ const History = () => {
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
-          className="border p-2 rounded bg-white"
+          className="border p-2 rounded bg-white text-black"
         >
           <option value="7d">Last 7 Days</option>
           <option value="30d">Last 30 Days</option>
@@ -364,21 +364,21 @@ const History = () => {
             <Line
               type="monotone"
               dataKey="carbs"
-              stroke={nutrientColors.carbs}
+              stroke={nutrientColors.TotalCarb}
               name="Carbs"
               yAxisId="right"
             />
             <Line
               type="monotone"
               dataKey="fats"
-              stroke={nutrientColors.fats}
+              stroke={nutrientColors.TotalFat}
               name="Fats"
               yAxisId="right"
             />
             <Line
               type="monotone"
               dataKey="fibers"
-              stroke={nutrientColors.fibers}
+              stroke={nutrientColors.dietaryFiber}
               name="Fibers"
               yAxisId="right"
             />
@@ -406,9 +406,9 @@ const History = () => {
               <p>{entry.desc}</p>
               <p>Calories: {entry.nutrition?.calories || 'N/A'}</p>
               <p>Protein: {entry.nutrition?.protein || 'N/A'} g</p>
-              <p>Carbs: {entry.nutrition?.carbohydrates || 'N/A'} g</p>
-              <p>Fats: {entry.nutrition?.fats || 'N/A'} g</p>
-              <p>Fibers: {entry.nutrition?.fiber || 'N/A'} g</p>
+              <p>Carbs: {entry.nutrition?.TotalCarb || 'N/A'} g</p>
+              <p>Fats: {entry.nutrition?.TotalFat || 'N/A'} g</p>
+              <p>Fibers: {entry.nutrition?.dietaryFiber || 'N/A'} g</p>
               <p>
                 Recorded At: {new Date(entry.recordedAt).toLocaleString()}
               </p>
