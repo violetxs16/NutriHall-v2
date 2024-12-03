@@ -124,7 +124,7 @@ const Preferences = () => {
               calorieRange: parseInt(e.target.value) || 0,
             }))
           }
-          className="border px-3 py-2 rounded w-full bg-white"
+          className="border px-3 py-2 rounded w-full bg-white text-gray-800"
         />
       </div>
 
@@ -140,7 +140,7 @@ const Preferences = () => {
               className={`px-4 py-2 rounded ${
                 preferences.goal === goalOption
                   ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200'
+                  : 'bg-gray-200 text-gray-800'
               }`}
             >
               {goalOption.charAt(0).toUpperCase() + goalOption.slice(1)}
