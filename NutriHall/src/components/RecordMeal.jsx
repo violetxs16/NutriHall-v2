@@ -124,6 +124,8 @@ const RecordMeal = () => {
       `;
 
       const response = await model.generateContent(prompt);
+      
+
       console.log('Response from Gemini API:', response);
 
       const mealPlan = parseMealPlan(response.response.candidates[0].content.parts[0].text);
