@@ -5,11 +5,9 @@ import { ref, onValue, set } from 'firebase/database';
 import { calculateCalorieRange } from '../utils/calorieCalculator';
 import { PreferencesContext } from '../contexts/PreferencesContext';
 
-
 const Preferences = () => {
   const { temporaryPreferences, setTemporaryPreferences } = useContext(PreferencesContext);
-  const [preferences, setPreferences] = useState(temporaryPreferences);
-
+  const [preferences, setPreferences] = useState(temporaryPreferences || {});
   const user = auth.currentUser;
 
   useEffect(() => {
@@ -35,7 +33,6 @@ const Preferences = () => {
       });
     }
   }, [user, preferences.goal]);
-  
 
   useEffect(() => {
     if (user) {
@@ -45,12 +42,11 @@ const Preferences = () => {
         const prefsData = snapshot.val();
         if (prefsData) {
           setPreferences(prefsData);
-          setTemporaryPreferences(prefsData); 
+          setTemporaryPreferences(prefsData);
         }
       });
     }
   }, [user, setTemporaryPreferences]);
-  
 
   const dietaryOptions = [
     'vegan',
@@ -91,10 +87,9 @@ const Preferences = () => {
         console.error('Error saving preferences:', error);
       });
   };
-  
 
   return (
-    <div>
+    <div className="p-4 md:p-6 lg:p-8">
       <h2 className="text-xl mb-4">Preferences</h2>
       <div className="mb-6">
         <h3 className="mb-2">Dietary Restrictions:</h3>
@@ -103,7 +98,7 @@ const Preferences = () => {
             <label key={option} className="flex items-center">
               <input
                 type="checkbox"
-                checked={preferences.dietaryRestrictions[option] || false}
+                checked={preferences.dietaryRestrictions?.[option] || false}
                 onChange={() => handleToggle(option)}
                 className="mr-2 bg-white"
               />
@@ -114,14 +109,29 @@ const Preferences = () => {
       </div>
 
       <div className="mb-6">
-        <label className="block mb-2">Calorie Range:</label>
+        <label className="block mb-2">Calorie Goal:</label>
         <input
           type="number"
-          value={preferences.calorieRange}
+          value={preferences.calorieRange || ''}
           onChange={(e) =>
             setPreferences((prev) => ({
               ...prev,
               calorieRange: parseInt(e.target.value) || 0,
+            }))
+          }
+          className="border px-3 py-2 rounded w-full bg-white text-gray-800"
+        />
+      </div>
+
+      <div className="mb-6">
+        <label className="block mb-2">Protein Goal (g):</label>
+        <input
+          type="number"
+          value={preferences.proteinGoal || ''}
+          onChange={(e) =>
+            setPreferences((prev) => ({
+              ...prev,
+              proteinGoal: parseInt(e.target.value) || 0,
             }))
           }
           className="border px-3 py-2 rounded w-full bg-white text-gray-800"
