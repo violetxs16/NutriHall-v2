@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
+import { ref, query, orderByChild, equalTo, get, set } from 'firebase/database';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI("AIzaSyCPNNVBuaWPm7-JaqFtmFA1P_pWJi6ifHQ");
@@ -13,6 +13,8 @@ const RecordMeal = () => {
   const [preferences, setPreferences] = useState(null);
   const [loading, setLoading] = useState(false);
   const [food, setFood] = useState(null);
+  const [foodData, setFoodData] = useState({});
+  const [recordedItems, setRecordedItems] = useState(new Set()); // Track recorded items
 
   useEffect(() => {
     const fetchPreferences = async (uid) => {
@@ -33,11 +35,12 @@ const RecordMeal = () => {
     const fetchFood = async () => {
       try {
         const foodRef = ref(database, 'food');
-        const queryRef = query(foodRef, orderByChild('diningHalls'), equalTo('Cowell & Stevenson'));
         const snapshot = await get(foodRef);
 
         if (snapshot.exists()) {
-          setFood(Object.keys(snapshot.val()));
+          const foodItems = snapshot.val();
+          setFoodData(foodItems);
+          setFood(Object.keys(foodItems));
         } else {
           console.log('No food exists');
         }
@@ -57,6 +60,50 @@ const RecordMeal = () => {
       fetchFood();
     }
   }, [user]);
+
+  const sanitizeKey = (key) => key.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+  const handleRecordMeal = async (foodName) => {
+    if (!user) {
+      alert('Please log in to record meals.');
+      return;
+    }
+
+    // Find closest matching food item in database
+    const matchingFood = Object.entries(foodData).find(([key]) => 
+      key.toLowerCase().includes(foodName.toLowerCase())
+    );
+
+    if (!matchingFood) {
+      alert(`Could not find "${foodName}" in our database`);
+      return;
+    }
+
+    const [exactName, item] = matchingFood;
+
+    try {
+      const timestamp = Date.now();
+      const diaryRef = ref(database, `users/${user.uid}/diary/${sanitizeKey(exactName)}_${timestamp}`);
+      const historyRef = ref(database, `users/${user.uid}/history/${sanitizeKey(exactName)}_${timestamp}`);
+      
+      const newEntry = {
+        ...item,
+        recordedAt: new Date().toISOString(),
+      };
+
+      await Promise.all([
+        set(diaryRef, newEntry),
+        set(historyRef, newEntry)
+      ]);
+
+      // Mark item as recorded
+      setRecordedItems(prev => new Set([...prev, foodName]));
+      alert('Meal recorded successfully!');
+    } catch (error) {
+      console.error('Error recording meal:', error);
+      alert('Failed to record meal');
+    }
+  };
 
   const parseMealPlan = (mealPlanText) => {
     const meals = {
@@ -124,8 +171,6 @@ const RecordMeal = () => {
       `;
 
       const response = await model.generateContent(prompt);
-      
-
       console.log('Response from Gemini API:', response);
 
       const mealPlan = parseMealPlan(response.response.candidates[0].content.parts[0].text);
@@ -142,6 +187,37 @@ const RecordMeal = () => {
     }
   };
 
+  const renderMealItem = (item, index) => {
+    const isRecorded = recordedItems.has(item.food);
+    const foodExists = Object.keys(foodData).some(key => 
+      key.toLowerCase().includes(item.food.toLowerCase())
+    );
+
+    return (
+      <li key={index} className="flex items-center justify-between mb-2 p-2 border rounded">
+        <div>
+          <span className="font-medium">{item.food}</span>
+          <span className="text-gray-600 ml-2">({item.quantity})</span>
+        </div>
+        {foodExists ? (
+          <button
+            onClick={() => handleRecordMeal(item.food)}
+            disabled={isRecorded}
+            className={`ml-4 px-3 py-1 rounded ${
+              isRecorded 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-green-600 text-white hover:bg-green-700'
+            }`}
+          >
+            {isRecorded ? 'Recorded' : 'Record'}
+          </button>
+        ) : (
+          <span className="text-red-500 text-sm">Not available</span>
+        )}
+      </li>
+    );
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl mb-4">Record Meal</h1>
@@ -151,23 +227,19 @@ const RecordMeal = () => {
         <>
           <button
             onClick={generateMeal}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
           >
-            Generate Meal
+            Generate Meal Plan
           </button>
           {meal && (
             <div className="mt-4">
-              <h2 className="text-xl font-bold">Generated Meal Plan:</h2>
-              <div className="meal-plan">
+              <h2 className="text-xl font-bold mb-4">Generated Meal Plan</h2>
+              <div className="meal-plan space-y-6">
                 {['Breakfast', 'Lunch', 'Dinner'].map((mealType) => (
-                  <div key={mealType}>
-                    <h3 className="text-lg font-semibold">{mealType}</h3>
-                    <ul>
-                      {meal[mealType].map((item, index) => (
-                        <li key={index}>
-                          {item.food}: {item.quantity}
-                        </li>
-                      ))}
+                  <div key={mealType} className="bg-white p-4 rounded-lg shadow">
+                    <h3 className="text-lg font-semibold mb-3">{mealType}</h3>
+                    <ul className="space-y-2">
+                      {meal[mealType].map((item, index) => renderMealItem(item, index))}
                     </ul>
                   </div>
                 ))}
