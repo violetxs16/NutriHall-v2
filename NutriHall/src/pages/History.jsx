@@ -123,8 +123,8 @@ const History = () => {
         // Accumulate nutrients for the date
         nutrientDataMap[date].calories += nutrients.calories;
         nutrientDataMap[date].protein += nutrients.protein;
-        nutrientDataMap[date].carbs += nutrients.TotalCarb;
-        nutrientDataMap[date].fats += nutrients.TotalFat;
+        nutrientDataMap[date].carbs += nutrients.totalCarb;
+        nutrientDataMap[date].fats += nutrients.totalFat;
         nutrientDataMap[date].fibers += nutrients.dietaryFiber;
       }
     });
@@ -165,11 +165,11 @@ const History = () => {
       0
     ),
     carbs: todayMeals.reduce(
-      (sum, entry) => sum + (parseInt(entry.nutrition?.TotalCarb) || 0),
+      (sum, entry) => sum + (parseInt(entry.nutrition?.totalCarb) || 0),
       0
     ),
     fats: todayMeals.reduce(
-      (sum, entry) => sum + (parseInt(entry.nutrition?.TotalFat) || 0),
+      (sum, entry) => sum + (parseInt(entry.nutrition?.totalFat) || 0),
       0
     ),
     fibers: todayMeals.reduce(
@@ -364,14 +364,14 @@ const History = () => {
             <Line
               type="monotone"
               dataKey="carbs"
-              stroke={nutrientColors.TotalCarb}
+              stroke={nutrientColors.totalCarb}
               name="Carbs"
               yAxisId="right"
             />
             <Line
               type="monotone"
               dataKey="fats"
-              stroke={nutrientColors.TotalFat}
+              stroke={nutrientColors.totalFat}
               name="Fats"
               yAxisId="right"
             />
@@ -405,10 +405,10 @@ const History = () => {
               <h3 className="text-lg">{entry.name}</h3>
               <p>{entry.desc}</p>
               <p>Calories: {entry.nutrition?.calories || 'N/A'}</p>
-              <p>Protein: {entry.nutrition?.protein || 'N/A'} g</p>
-              <p>Carbs: {entry.nutrition?.TotalCarb || 'N/A'} g</p>
-              <p>Fats: {entry.nutrition?.TotalFat || 'N/A'} g</p>
-              <p>Fibers: {entry.nutrition?.dietaryFiber || 'N/A'} g</p>
+              <p>Protein: {entry.nutrition?.protein || 'N/A'}</p>
+              <p>Carbs: {entry.nutrition?.totalCarb || 'N/A'}</p>
+              <p>Fats: {entry.nutrition?.totalFat || 'N/A'}</p>
+              <p>Fibers: {entry.nutrition?.dietaryFiber || 'N/A'}</p>
               <p>
                 Recorded At: {new Date(entry.recordedAt).toLocaleString()}
               </p>
