@@ -13,7 +13,14 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const sanitizedEmail = email.replace(/[.@]/g, '_'); // Replace '.' and '@' with '_'
+
+      // Save user data to Firebase Realtime Database
+      await set(ref(database, `users/${sanitizedEmail}`), {
+        uid: userCredential.user.uid,
+        email,
+      });
       navigate('/settings');
     } catch (err) {
       setError(err.message);

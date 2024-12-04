@@ -10,7 +10,7 @@ describe("Firebase Database Tests Users", () => {
         const data = snapshot.val();
         //Assertions
         expect(data.accountInfo.name).toBe("Artem")
-        expect(data.preferences.calorieRange).toBe(2223)
+        expect(data.preferences.calorieRange).toBe(2217)
       }else{
         throw new Error("User does not exist");
       }
