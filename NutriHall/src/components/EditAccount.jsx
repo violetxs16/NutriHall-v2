@@ -88,7 +88,7 @@ const EditAccount = () => {
           name="name"
           value={accountInfo.name}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-white border px-3 py-2 rounded text-gray-800"
         />
       </div>
 
@@ -98,7 +98,7 @@ const EditAccount = () => {
           name="sex"
           value={accountInfo.sex}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-white border px-3 py-2 rounded text-gray-800"
         >
           <option value="male">Male</option>
           <option value="female">Female</option>
@@ -113,7 +113,7 @@ const EditAccount = () => {
           name="height"
           value={accountInfo.height}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-white border px-3 py-2 rounded text-gray-800"
         />
       </div>
 
@@ -124,7 +124,7 @@ const EditAccount = () => {
           name="weight"
           value={accountInfo.weight}
           onChange={handleChange}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-white border px-3 py-2 rounded text-gray-800"
         />
       </div>
 
@@ -136,7 +136,7 @@ const EditAccount = () => {
             name="age"
             value={accountInfo.age || ''}
             onChange={handleChange}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full bg-white border px-3 py-2 rounded text-gray-800"
         />
       </div>
 

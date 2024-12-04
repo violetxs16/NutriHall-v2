@@ -24,7 +24,7 @@ const Settings = () => {
       <div className="flex flex-col md:flex-row md:space-x-4 mb-6">
         <button
           className={`px-4 py-2 mb-2 md:mb-0 ${
-            activeTab === 'preferences' ? 'bg-gray-300' : ''
+            activeTab === 'preferences' ? 'bg-gray-300 text-gray-800' : ''
           }`}
           onClick={() => setActiveTab('preferences')}
         >
@@ -32,7 +32,7 @@ const Settings = () => {
         </button>
         <button
           className={`px-4 py-2 mb-2 md:mb-0 ${
-            activeTab === 'editAccount' ? 'bg-gray-300' : ''
+            activeTab === 'editAccount' ? 'bg-gray-300 text-gray-800' : ''
           }`}
           onClick={() => setActiveTab('editAccount')}
         >
