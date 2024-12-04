@@ -57,6 +57,21 @@ Reusable components used across the project.
 - **`Navbar.jsx`**  
   Handles the sidebar or top navigation bar with links to other pages.
 
+- **`LP_NavBar.jsx`**  
+  It contains the navbar on top of the landing page with a button to sign up.
+
+- **`LP_Title.jsx`**  
+  It contains the main big text in the center stage of the landing page.
+
+- **`LP_Features.jsx`**  
+  It contains the features section of the landing page.
+
+- **`LP_Glance.jsx`**  
+  It contains the video of the product on the landing page along with all the bullet points.
+
+- **`LP_Footer.jsx`**  
+  It contains the footer of the landing page with all the links to external resources.
+
 - **`Preferences.jsx`**  
   Allows users to set their dietary restrictions and calorie preferences.
 
@@ -99,6 +114,9 @@ Individual pages of the application, each representing a specific route.
 
 - **`GenerateMeal.jsx`**  
   Provides meal suggestions based on user preferences and calorie range.
+
+- **`LandingPage.jsx`**  
+  Displays the website's landing page, with the ability to see key features and get started.
 
 - **`History.jsx`**  
   Displays the user’s meal history with filtering options.
