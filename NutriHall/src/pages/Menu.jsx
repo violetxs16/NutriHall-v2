@@ -8,6 +8,7 @@ import useMenuData from '../components/MenuData';
 import backgroundImage from '../assets/ucsc_map.jpg';
 import RestrictionHeader from '../components/RestrictionHeader';
 import { PreferencesContext } from '../contexts/PreferencesContext';
+import { ThemeContext } from '../contexts/ThemeContext';
 import DiningHallButtons from '../components/DiningHallButtons';
 import '../styles/main.css';
 
@@ -30,6 +31,7 @@ const Menu = () => {
   const [dinner, setDinner] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDiningHall, setSelectedDiningHall] = useState(null);
+  const { theme } = useContext(ThemeContext);
 
   const user = auth.currentUser;
 
@@ -129,7 +131,7 @@ const Menu = () => {
           placeholder="Search for food..."
           value={searchQuery}
           onChange={handleSearchChange}
-          className="input input-bordered bg-white text-black flex-grow"
+          className={`input input-bordered ${theme === 'mytheme' ? 'bg-white text-black' : 'bg-gray-700 text-white'} flex-grow`}
         />
         <RestrictionHeader />
       </div>
