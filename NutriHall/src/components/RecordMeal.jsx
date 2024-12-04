@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { ref, get, set } from 'firebase/database';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { ThemeContext } from '../contexts/ThemeContext';
 
 const genAI = new GoogleGenerativeAI("AIzaSyCPNNVBuaWPm7-JaqFtmFA1P_pWJi6ifHQ");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
@@ -18,6 +19,7 @@ const RecordMeal = () => {
   const [foodData, setFoodData] = useState({});
   const [recordedItems, setRecordedItems] = useState(new Set()); // Track recorded items
   const [fuse, setFuse] = useState(null); // Initialize Fuse.js instance
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
@@ -301,7 +303,7 @@ const RecordMeal = () => {
               <h2 className="text-xl font-bold mb-4">Generated Meal Plan</h2>
               <div className="meal-plan space-y-6">
                 {['Breakfast', 'Lunch', 'Dinner'].map((mealType) => (
-                  <div key={mealType} className="bg-white p-4 rounded-lg shadow">
+                  <div key={mealType} className={`p-4 rounded-lg shadow ${theme === 'mytheme' ? 'bg-white' : 'bg-zinc-900'}`}>
                     <h3 className="text-lg font-semibold mb-3">{mealType}</h3>
                     <ul className="space-y-2">
                       {meal[mealType].map((item, index) => renderMealItem(item, index))}

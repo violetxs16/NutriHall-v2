@@ -11,7 +11,7 @@ const LP_Footer = () => {
               <li key={index}>
                 <a
                   href={link.href}
-                  className="text-neutral-300 hover:text-white"
+                  className="text-neutral-300 hover:text-black"
                 >
                   {link.text}
                 </a>
@@ -26,7 +26,7 @@ const LP_Footer = () => {
               <li key={index}>
                 <a
                   href={link.href}
-                  className="text-neutral-300 hover:text-white"
+                  className="text-neutral-300 hover:text-black"
                 >
                   {link.text}
                 </a>
@@ -41,7 +41,7 @@ const LP_Footer = () => {
               <li key={index}>
                 <a
                   href={link.href}
-                  className="text-neutral-300 hover:text-white"
+                  className="text-neutral-300 hover:text-black"
                 >
                   {link.text}
                 </a>

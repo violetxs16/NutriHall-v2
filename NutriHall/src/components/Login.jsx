@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [isResettingPassword, setIsResettingPassword] = useState(false); // State to toggle reset form
   const [resetEmail, setResetEmail] = useState('');
+  const { theme } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -33,10 +35,10 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className={`flex items-center justify-center min-h-screen bg-${theme === 'mytheme' ? 'gray-100' : 'gray-800'}`}>
       <form
         onSubmit={isResettingPassword ? handlePasswordReset : handleLogin}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+        className={`p-6 rounded shadow-md w-full max-w-sm ${theme === 'mytheme' ? 'bg-white' : 'bg-zinc-900'}`}
       >
         <h2 className="text-2xl mb-4">{isResettingPassword ? 'Reset Password' : 'Login'}</h2>
         {error && <p className="text-red-500 mb-3">{error}</p>}

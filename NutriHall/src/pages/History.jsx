@@ -1,5 +1,5 @@
 // src/Pages/History.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { auth, database } from '../firebaseConfig';
 import { ref, onValue, remove, set } from 'firebase/database';
 import {
@@ -14,6 +14,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
+import { ThemeContext } from '../contexts/ThemeContext';
 import ReactStars from 'react-rating-stars-component';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -32,6 +33,7 @@ const History = () => {
   const [searchType, setSearchType] = useState('name');
   const [sortType, setSortType] = useState('date_desc'); // Default sort by newest date
   const user = auth.currentUser;
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     if (!user) return;
@@ -263,13 +265,12 @@ const History = () => {
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="border p-2 rounded w-full mr-2 bg-white text-black"
-        />
+          className={`border p-2 rounded w-full mr-2 ${theme === 'mytheme' ? 'bg-white text-black' : 'bg-zinc-900 text-white'}`}/>
 
         <select
           value={sortType}
           onChange={(e) => setSortType(e.target.value)}
-          className="border p-2 rounded bg-white text-black"
+          className={`border p-2 rounded ${theme === 'mytheme' ? 'bg-white text-black' : 'bg-zinc-900 text-white'}`}
         >
           <option value="date_desc">Date (Newest First)</option>
           <option value="date_asc">Date (Oldest First)</option>
@@ -302,7 +303,7 @@ const History = () => {
                 endAngle={-270}
               >
                 <Cell fill={nutrientColors[nutrient]} />
-                <Cell fill="#e0e0e0" />
+                <Cell fill={`${theme === 'mytheme' ? '#e0e0e0' : '#18181b'}`}/>
               </Pie>
             </PieChart>
             <div style={{ textAlign: 'center', fontSize: '12px' }}>
@@ -318,7 +319,7 @@ const History = () => {
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
-          className="border p-2 rounded bg-white text-black"
+          className={`border p-2 rounded ${theme === 'mytheme' ? 'bg-white text-black' : 'bg-zinc-900 text-white'}`}
         >
           <option value="7d">Last 7 Days</option>
           <option value="30d">Last 30 Days</option>
@@ -344,7 +345,14 @@ const History = () => {
               orientation="right"
               label={{ value: 'Grams', angle: 90, position: 'insideRight' }}
             />
-            <Tooltip />
+            <Tooltip 
+              contentStyle={{
+                backgroundColor: theme === 'mytheme' ? '#fff' : '#18181b', // Light or dark theme
+                borderRadius: '5px',  // Rounded corners
+                padding: '10px',      // Spacing inside the tooltip
+                color: theme === 'mytheme' ? '#000' : '#fff', // Text color
+              }}
+            />
             {/* Calories Line */}
             <Line
               type="monotone"
@@ -401,7 +409,10 @@ const History = () => {
           <p>No meals recorded yet.</p>
         ) : (
           sortedMealHistory.map((entry) => (
-            <div key={entry.id} className="border p-4 mb-4 rounded">
+            <div 
+              key={entry.id} 
+              className={`border p-4 mb-4 rounded ${theme === 'mytheme' ? 'bg-white text-black' : 'bg-zinc-900 text-white'}`}
+            >
               <h3 className="text-lg">{entry.name}</h3>
               <p>{entry.desc}</p>
               <p>Calories: {entry.nutrition?.calories || 'N/A'}</p>
