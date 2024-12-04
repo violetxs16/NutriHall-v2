@@ -1,8 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import React, { useContext } from 'react';
 import { css, jsx } from "@emotion/react";
 import { motion } from "framer-motion";
 import MenuAll from "./MenuAll";
+import { ThemeContext } from '../contexts/ThemeContext';
 
 const MenuItems = ({
   items,
@@ -21,6 +23,7 @@ const MenuItems = ({
     },
   };
 
+  const { theme } = useContext(ThemeContext);
   const breakpoints = [576, 768, 992, 1200];
   const mq = breakpoints.map((bp) => `@media (max-width: ${bp}px)`);
 
@@ -38,17 +41,17 @@ const MenuItems = ({
         }
         margin-top: 30px;
         padding: 40px 20px;
-        background: #fff;
+        background: ${theme === 'mytheme' ? '#fff' : '#171F2A'};
         border-radius: 50px;
   
         .menu-items {
           padding: 1.5rem;
           display: grid;
           grid-template-rows: auto 1fr auto;
-          border: #efefef 1px solid;
+          border: ${theme === 'mytheme' ? '#efefef' : '#0B0B0D'} 1px solid;
           border-top: none;
-          color: #000;
-          background: #f9f9f9;
+          color: ${theme === 'mytheme' ? '#000' : '#fff'};
+          background: ${theme === 'mytheme' ? '#f9f9f9' : '#18181b'};
           border-radius: 15px;
   
           ${mq[0]} {
@@ -88,7 +91,7 @@ const MenuItems = ({
               .item-title {
                 font-size: 1rem;
                 font-weight: bold;
-                color: #333;
+                color: ${theme === 'mytheme' ? '#333' : '#BEBEBE'};
                 ${mq[(0, 1)]} {
                   font-size: 0.9rem;
                 }
