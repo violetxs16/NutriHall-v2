@@ -103,7 +103,10 @@ function FoodDiary() {
                     const entryRef = ref(database, `users/${user.uid}/diary/${id}`);  
                     remove(entryRef);
                     setMealDiary((prevDiary) => prevDiary.filter((entry) => entry.id !== id));
+                    console.log("Succesfully deleted");
                // }
+            }else{
+                console.log("Item could not be deleted");
             }
         })
     };
