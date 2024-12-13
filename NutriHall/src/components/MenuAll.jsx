@@ -73,6 +73,8 @@ const MenuAll = ({
   const [filteredItems, setFilteredItems] = useState([]);
   const user = auth.currentUser;
   const { temporaryPreferences } = useContext(PreferencesContext);
+  const [isRecorded, setIsRecorded] = useState(false);
+  const [recordedItems, setRecordedItems] = useState({});
 
   useEffect(() => {
     console.log('Items in MenuAll:', items);
@@ -174,10 +176,22 @@ const MenuAll = ({
       set(diaryRef, newEntry),
       set(historyRef, newEntry),
     ];
-  
+    
+    setRecordedItems((prev) => ({
+      ...prev,
+      [item.name]: true,
+    }));
+    setTimeout(() => {
+      setRecordedItems((prev) => ({
+        ...prev,
+        [item.name]: false,
+      }));
+    }, 1000);
+
     Promise.all(promises)
       .then(() => {
-        alert('Meal recorded successfully!');
+        setIsRecorded(true);
+        setTimeout(() => setIsRecorded(false), 3000);
       })
       .catch((error) => {
         console.error('Error recording meal:', error);
@@ -251,9 +265,11 @@ const MenuAll = ({
               {/* Record Meal Button */}
               <button
                 onClick={() => handleRecordMeal(item)}
-                className="mt-2 px-2 py-2 bg-green-600 text-#64748b rounded w-40"
+                className={`mt-2 px-2 py-2 ${
+                  recordedItems[item.name] ? "bg-gray-600" : "bg-green-600"
+                } text-#64748b rounded w-40`}
               >
-                Record Meal
+                {recordedItems[item.name] ? "Recorded!" : "Record Meal"}
               </button>
             </div>
           );
